@@ -266,15 +266,24 @@
 
 .Outputs
 	If "Raw" swicth is specified, following object are returned:
+
 	* GetTranslations
+
 		Type: TerminologyService.Matches
+
 		Returns collection of Match objects. A Match object consists of the properties used to
 		represent a translation pair, and to define where the translation pair comes from.
+
 	* GetLanguages
+
 		Type: TerminologyService.Languages
+
 		Returns Languages collection of Language objects.
+
 	* GetProducts
+
 		Type: TerminologyService.Products
+
 		Returns Products collection of Product objects.
 #>
 function Get-TerminologyTranslation
