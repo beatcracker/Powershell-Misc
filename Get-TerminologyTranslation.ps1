@@ -288,68 +288,68 @@
 #>
 function Get-TerminologyTranslation
 {
-	[CmdletBinding(DefaultParameterSetName='Basic')]
+	[CmdletBinding(DefaultParameterSetName='SingleProduct')]
 	Param
 	(
 		[Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true,
-		HelpMessage="Text to translate (e.g., Control Panel)", ParameterSetName='Basic')]
+		HelpMessage="Text to translate (e.g., Control Panel)", ParameterSetName='SingleProduct')]
 		[Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true,
-		HelpMessage="Text to translate (e.g., Control Panel)", ParameterSetName='Complex')]
+		HelpMessage="Text to translate (e.g., Control Panel)", ParameterSetName='MultipleProducts')]
 		[ValidateNotNullOrEmpty()]
 		[string]$Text,
 
 		[Parameter(Mandatory=$true, ValueFromPipelineByPropertyName=$true,
-		HelpMessage="Language code of the provided text (e.g., en-us)", ParameterSetName='Basic')]
+		HelpMessage="Language code of the provided text (e.g., en-us)", ParameterSetName='SingleProduct')]
 		[Parameter(Mandatory=$true, ValueFromPipelineByPropertyName=$true,
-		HelpMessage="Language code of the provided text (e.g., en-us)", ParameterSetName='Complex')]
+		HelpMessage="Language code of the provided text (e.g., en-us)", ParameterSetName='MultipleProducts')]
 		[ValidateScript({[System.Globalization.Cultureinfo]::GetCultureInfo($_)})]
 		[string]$From,
 
 		[Parameter(Mandatory=$true, ValueFromPipelineByPropertyName=$true,
-		HelpMessage="Language code in to which to translate the text (e.g., ru-ru)", ParameterSetName='Basic')]
-		[Parameter(Mandatory=$true, ValueFromPipelineByPropertyName=$true, ParameterSetName='Complex')]
+		HelpMessage="Language code in to which to translate the text (e.g., ru-ru)", ParameterSetName='SingleProduct')]
+		[Parameter(Mandatory=$true, ValueFromPipelineByPropertyName=$true, ParameterSetName='MultipleProducts')]
 		[ValidateScript({[System.Globalization.Cultureinfo]::GetCultureInfo($_)})]
 		[string]$To,
 
-		[Parameter(Mandatory=$false, ValueFromPipelineByPropertyName=$true, ParameterSetName='Basic')]
-		[Parameter(Mandatory=$false, ValueFromPipelineByPropertyName=$true, ParameterSetName='Complex')]
+		[Parameter(Mandatory=$false, ValueFromPipelineByPropertyName=$true, ParameterSetName='SingleProduct')]
+		[Parameter(Mandatory=$false, ValueFromPipelineByPropertyName=$true, ParameterSetName='MultipleProducts')]
 		[ValidateSet('CaseInsensitive', 'CaseSensitive', 'HotKeyAndCaseSensitive')]
 		[string]$Sensitivity = 'CaseInsensitive',
 
-		[Parameter(Mandatory=$false, ValueFromPipelineByPropertyName=$true, ParameterSetName='Basic')]
-		[Parameter(Mandatory=$false, ValueFromPipelineByPropertyName=$true, ParameterSetName='Complex')]
+		[Parameter(Mandatory=$false, ValueFromPipelineByPropertyName=$true, ParameterSetName='SingleProduct')]
+		[Parameter(Mandatory=$false, ValueFromPipelineByPropertyName=$true, ParameterSetName='MultipleProducts')]
 		[ValidateSet('Exact', 'Contains', 'AnyWord')]
 		[string]$Operator = 'Exact',
 
 		[Parameter(Mandatory=$true, ValueFromPipelineByPropertyName=$true,
 		HelpMessage="Sources in which to search for a translation (e.g., Terms, UiStrings or Both)",
-		ParameterSetName='Basic')]
-		[Parameter(Mandatory=$true, ValueFromPipelineByPropertyName=$true, ParameterSetName='Complex')]
+		ParameterSetName='SingleProduct')]
+		[Parameter(Mandatory=$true, ValueFromPipelineByPropertyName=$true, ParameterSetName='MultipleProducts')]
 		[ValidateSet('Terms', 'UiStrings', 'Both')]
 		[string]$Source,
 
-		[Parameter(Mandatory=$false, ValueFromPipelineByPropertyName=$true, ParameterSetName='Basic')]
-		[Parameter(Mandatory=$false, ValueFromPipelineByPropertyName=$true, ParameterSetName='Complex')]
+		[Parameter(Mandatory=$false, ValueFromPipelineByPropertyName=$true, ParameterSetName='SingleProduct')]
+		[Parameter(Mandatory=$false, ValueFromPipelineByPropertyName=$true, ParameterSetName='MultipleProducts')]
 		[switch]$Unique,
 
-		[Parameter(Mandatory=$false, ValueFromPipelineByPropertyName=$true, ParameterSetName='Basic')]
-		[Parameter(Mandatory=$false, ValueFromPipelineByPropertyName=$true, ParameterSetName='Complex')]
+		[Parameter(Mandatory=$false, ValueFromPipelineByPropertyName=$true, ParameterSetName='SingleProduct')]
+		[Parameter(Mandatory=$false, ValueFromPipelineByPropertyName=$true, ParameterSetName='MultipleProducts')]
 		[ValidateRange(1,20)]
 		[int]$MaxTranslations=1,
 
-		[Parameter(Mandatory=$false, ValueFromPipelineByPropertyName=$true, ParameterSetName='Basic')]
-		[Parameter(Mandatory=$false, ValueFromPipelineByPropertyName=$true, ParameterSetName='Complex')]
+		[Parameter(Mandatory=$false, ValueFromPipelineByPropertyName=$true, ParameterSetName='SingleProduct')]
+		[Parameter(Mandatory=$false, ValueFromPipelineByPropertyName=$true, ParameterSetName='MultipleProducts')]
 		[switch]$IncludeDefinitions,
-		[Parameter(Mandatory=$false, ValueFromPipelineByPropertyName=$true, ParameterSetName='Basic')]
+		[Parameter(Mandatory=$false, ValueFromPipelineByPropertyName=$true, ParameterSetName='SingleProduct')]
 		[ValidateNotNullOrEmpty()]
 		[string]$Name,
 
-		[Parameter(Mandatory=$false, ValueFromPipelineByPropertyName=$true, ParameterSetName='Basic')]
+		[Parameter(Mandatory=$false, ValueFromPipelineByPropertyName=$true, ParameterSetName='SingleProduct')]
 		[array]$Versions,
 
 		[Parameter(Mandatory=$true, ValueFromPipelineByPropertyName=$true,
 		HelpMessage="A hashtable representing multiple products for which to filter the search results (e.g., @{Windows = '7','8','8.1';'Windows Server' = '2008','2012'})",
-		ParameterSetName='Complex')]
+		ParameterSetName='MultipleProducts')]
 		[ValidateNotNullOrEmpty()]
 		[hashtable]$Products,
 
@@ -359,8 +359,8 @@ function Get-TerminologyTranslation
 		[Parameter(Mandatory=$false, ParameterSetName='GetLanguages')]
 		[switch]$GetLanguages,
 
-		[Parameter(Mandatory=$false, ValueFromPipelineByPropertyName=$true, ParameterSetName='Basic')]
-		[Parameter(Mandatory=$false, ValueFromPipelineByPropertyName=$true, ParameterSetName='Complex')]
+		[Parameter(Mandatory=$false, ValueFromPipelineByPropertyName=$true, ParameterSetName='SingleProduct')]
+		[Parameter(Mandatory=$false, ValueFromPipelineByPropertyName=$true, ParameterSetName='MultipleProducts')]
 		[Parameter(Mandatory=$false, ValueFromPipelineByPropertyName=$true, ParameterSetName='GetProducts')]
 		[Parameter(Mandatory=$false, ValueFromPipelineByPropertyName=$true, ParameterSetName='GetLanguages')]
 		[switch]$Raw
@@ -368,6 +368,7 @@ function Get-TerminologyTranslation
 	Begin
 	{
 		$Uri = 'http://api.terminology.microsoft.com/Terminology.svc?wsdl'
+
 		Try
 		{
 			$tSvc = New-WebServiceProxy -Namespace 'tsvc' -Class 'tsvc' -Uri $Uri -UseDefaultCredential -ErrorAction Stop
@@ -381,6 +382,7 @@ function Get-TerminologyTranslation
 	{
 		$tsvcSensitivity = [tsvc.SearchStringComparison]::$Sensitivity
 		$tsvcOperator = [tsvc.SearchOperator]::$Operator
+
 		if($Source -eq 'Both')
 		{
 			$tsvcSource = [tsvc.TranslationSource]::Terms, [tsvc.TranslationSource]::UiStrings
@@ -389,10 +391,12 @@ function Get-TerminologyTranslation
 		{
 			$tsvcSource = [tsvc.TranslationSource]::$Source
 		}
+
 		if($Name)
 		{
 			$Products = @{$Name = $Versions}
 		}
+
 		if($Products)
 		{
 			$tsvcProducts = $Products.GetEnumerator() |
@@ -412,6 +416,7 @@ function Get-TerminologyTranslation
 		{
 			$tsvcProducts = $null
 		}
+
 		if($GetProducts)
 		{
 			$ret = $tSvc.GetProducts()
@@ -457,6 +462,7 @@ function Get-TerminologyTranslation
 						$IncludeDefinitions, $true,
 						$tsvcProducts
 					)
+
 			if(!$Raw)
 			{
 				$ret = $ret | ForEach-Object {$_.Translations | ForEach-Object {$_.TranslatedText.Trim()}}
@@ -464,6 +470,7 @@ function Get-TerminologyTranslation
 		}
 		return $ret
 	}
+
 	End
 	{
 		$tSvc.Dispose()
