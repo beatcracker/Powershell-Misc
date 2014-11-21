@@ -20,9 +20,9 @@ Features
 
 ####Split-CommandLine.ps1
 
-This Cmdlet version of the code from the article [PowerShell and external commands done right](http://edgylogic.com/blog/powershell-and-external-commands-done-right). It can parse commandline arguments using Win32 API [CommandLineToArgvW](http://msdn.microsoft.com/en-us/library/windows/desktop/bb776391.aspx) function.
+This is the Cmdlet version of the code from the article [PowerShell and external commands done right](http://edgylogic.com/blog/powershell-and-external-commands-done-right). It can parse command-line arguments using Win32 API function [CommandLineToArgvW](http://msdn.microsoft.com/en-us/library/windows/desktop/bb776391.aspx).
 
 Features
 
-  * Parse arbitrary commandline, or if none specified, the command line of current PowerShell host.
+  * Parse arbitrary command-line, or if none specified, the command-line of the current PowerShell host.
   * Full comment-based help and usage examples.
