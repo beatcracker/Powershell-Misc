@@ -148,7 +148,10 @@
 
 .Parameter Products
 	This parameter is optional. Mutually exclusive with parameters "Name" and "Version".
-	A hashtable representing multiple products for which to filter the search results.
+
+	A hashtable representing one or more products and their versions, for which to filter the search results.
+    Hashtable key is the product name and hashtable value contains array of versions. If versions array is empty,
+    results are not filtered by version.
 
 	Example:
 
