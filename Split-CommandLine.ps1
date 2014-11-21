@@ -1,49 +1,46 @@
 ﻿<#
 .Synopsis
-
-	Parse commandline arguments using Win32 API CommandLineToArgvW function.
+	Parse command=line arguments using Win32 API CommandLineToArgvW function.
 
 .Link
-
 	http://edgylogic.com/blog/powershell-and-external-commands-done-right/
 
 .Description
-
-    This Cmdlet version of the code from the article http://edgylogic.com/blog/powershell-and-external-commands-done-right .
-    It can parse commandline arguments using Win32 API CommandLineToArgvW function. 
+    This is the Cmdlet version of the code from the article http://edgylogic.com/blog/powershell-and-external-commands-done-right.
+    It can parse command-line arguments using Win32 API function CommandLineToArgvW . 
 
 .Parameter CommandLine
 	This parameter is optional.
 
-	A string representing the commandline to parse. If not specified, the command line of current PowerShell host is used.
+	A string representing the command-line to parse. If not specified, the command-line of the current PowerShell host is used.
 
 .Example
 	Split-CommandLine
 
 		Description
 		-----------
-        Get the command line of current PowerShell host, parse it and return arguments.
+        Get the command-line of the current PowerShell host, parse it and return arguments.
 
 .Example
 	Split-CommandLine -CommandLine '"c:\windows\notepad.exe" test.txt'
 
 		Description
 		-----------
-        Parse user-specified command line and return arguments.
+        Parse user-specified command-line and return arguments.
 
 .Example
     '"c:\windows\notepad.exe" test.txt',  '%SystemRoot%\system32\svchost.exe -k LocalServiceNetworkRestricted' | Split-CommandLine
 
 		Description
 		-----------
-        Parse user-specified command line from pipeline input and return arguments.
+        Parse user-specified command-line from pipeline input and return arguments.
 
 .Example
     Get-WmiObject Win32_Process -Filter "Name='notepad.exe'" | Split-CommandLine
 
 		Description
 		-----------
-        Parse user-specified command line from property name of pipeline input and return arguments.
+        Parse user-specified command-line from property name of pipeline input and return arguments.
         
 #>
 function Split-CommandLine
@@ -51,7 +48,7 @@ function Split-CommandLine
     [CmdletBinding()]
     Param
     (
-        [Parameter(Mandatory=$false, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true, Position = 0)]
+        [Parameter(Mandatory=$false, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true, Position=0)]
         [ValidateNotNullOrEmpty()]
         [string]$CommandLine
     )
@@ -83,11 +80,11 @@ function Split-CommandLine
     Process
     {
         $ParsedArgCount = 0
-        $ParsedArgsPtr = $Shell32::CommandLineToArgvW($CommandLine, [ref] $ParsedArgCount)
+        $ParsedArgsPtr = $Shell32::CommandLineToArgvW($CommandLine, [ref]$ParsedArgCount)
 
         Try
         {
-            $ParsedArgs = @( );
+            $ParsedArgs = @();
 
             0..$ParsedArgCount | ForEach-Object {
                 $ParsedArgs += [System.Runtime.InteropServices.Marshal]::PtrToStringUni(
