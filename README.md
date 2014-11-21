@@ -2,6 +2,11 @@
 
 ####Get-TerminologyTranslation.ps1
 
+##Table of Contents
+
+- [Get-TerminologyTranslation.ps1](####Get-TerminologyTranslation.ps1)
+- [Split-CommandLine.ps1](####Split-CommandLine.ps1)
+
 Enables user to look up terminology translations and user-interface translations from actual Microsoft products via [Microsoft Terminology Service API](http://www.microsoft.com/Language/en-US/Microsoft-Terminology-API.aspx). For details see [ Terminology Service API SDK PDF](http://download.microsoft.com/download/1/5/D/15D3DDC6-7403-4366-BE99-AF5247ADEF1C/Microsoft-Terminology-API-SDK.pdf).
 
 Features
