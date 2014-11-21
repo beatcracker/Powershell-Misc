@@ -2,8 +2,8 @@
 
 ##Table of Contents
 
-- [Get-TerminologyTranslation.ps1](####Get-TerminologyTranslation.ps1)
-- [Split-CommandLine.ps1](####Split-CommandLine.ps1)
+- [Get-TerminologyTranslation](####Get-TerminologyTranslation.ps1)
+- [Split-CommandLine](####Split-CommandLine.ps1)
 
 ####Get-TerminologyTranslation.ps1
 
