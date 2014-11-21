@@ -12,3 +12,12 @@ Features
   * Get list of languages supported by the Terminology Service API.
   * Get list of products supported by the Terminology Service API.
   * Full comment-based help and usage examples.
+
+####Split-CommandLine.ps1
+
+This Cmdlet version of the code from the article [PowerShell and external commands done right](http://edgylogic.com/blog/powershell-and-external-commands-done-right). It can parse commandline arguments using Win32 API [CommandLineToArgvW](http://msdn.microsoft.com/en-us/library/windows/desktop/bb776391.aspx) function.
+
+Features
+
+  * Parse arbitrary commandline, or if none specified, the command line of current PowerShell host.
+  * Full comment-based help and usage examples.
