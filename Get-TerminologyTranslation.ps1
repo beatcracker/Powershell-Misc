@@ -1,14 +1,19 @@
 <#
 .Synopsis
+
 	Look up terminology translations and user-interface translations from actual Microsoft products.
 
 .Link
+
 	http://www.microsoft.com/Language/en-US/Microsoft-Terminology-API.aspx
 	http://download.microsoft.com/download/1/5/D/15D3DDC6-7403-4366-BE99-AF5247ADEF1C/Microsoft-Terminology-API-SDK.pdf
 
 .Description
+
 	Enables user to look up terminology translations and user-interface translations from actual Microsoft products.
+
 	Features:
+
 	* Any-to-any language translation searches, e.g. Japanese to/from French or any other language combination.
 	* Filter searches with string case and hotkey sensitivity.
 	* Filter searches by product name and version.
@@ -22,27 +27,38 @@
 
 .Parameter From
 	This parameter is required. Example: 'en-us'
+
 	A string representing the language code of the provided text.
+
 	The language codes used for this parameter must be a language code returned by GetLanguages.
 
 .Parameter To
 	This parameter is required. Example: 'ru-ru'
+
 	A string representing the language code in to which to translate the text.
+
 	The language codes used for this parameter must be a language code returned by GetLanguages.
 
 .Parameter Sensitivity
 	This parameter is optional. Default value is "CaseInsensitive".
+
 	A string representing the sensitivity to filter results. The value can be one of the following:
+
 	CaseInsensitive
+
 		Return translations in which the "From" text searched disregards the case of the text.
 		A search for "Cat" would return both:
 			"Cat" and "cat".
+
 	CaseSensitive
+
 		Return translations in which the "From" text searched takes the case of the text into account.
 		Only results matching the case of the "from" are returned.
 		A search for "Cat" would return:
 			"Cat" but not: "cat".
+
 	HotKeyAndCaseSensitive
+
 		Return translations in which the "From" text searched takes the case of the text into account,
 		along with any hotkeys in the string. Only results matching the case of  the "from" are returned.
 		A search for "&Cat" would return:
@@ -51,64 +67,95 @@
 .Parameter Operator
 	This parameter is optional. Default value is "Exact".
 	A string representing the type of matching operation to use.
+
 	The value can be one of the following:
+
 	Exact
+
 		Return translations in which the provided text has an exact match to the translation pair’s "From" text.
+
 	Contains
+
 		Return translations in which the "From" text contains the provided translation text.
+
 	AnyWord
+
 		Return translations in which the "From" text contains any word in the provided translation text.
+
 		This means that a search for:
 			"Lorem rutrum risus quis nulla ullamcorper"
+
 		Can even result in the hit:
 			"Lorem ipsum dolor sit amet, {0}, consectetur adipiscing elit"
+
 		Notice that there is only one word that matches. However, realize that results with more matching words will be ranked higher.
-		A one word match isn’t likely to be in the top results.
+		A one word match isn't likely to be in the top results.
 
 .Parameter Source
 	This parameter is required.
 	A string representing the sources in which to search for a translation.
+
 	The parameter must be one of the following values:
+
 	Terms
+
 		Microsoft terminology collections are searched.
+
 	UiStrings
+
 		Microsoft product strings are searched for translations.
+
 	Both
+
 		Microsoft terminology collections and product strings are searched.
 
 .Parameter Unique
 	This parameter is optional.
+
 	A switch indicating whether or not only unique (that is, distinct) translations should be returned.
+
 	If true is specified, the results are aggregated so that each distinct translation only appears once.
 	If false is specified, the results are not aggregated,but each instance is returned.
+
 .Parameter MaxTranslations
 	This parameter is optional. Default value is 1.
+
 	An integer representing the maximum number of translations to return. The maximum allowed value is 20.
 
 .Parameter IncludeDefinitions
 	This parameter is optional. Default value is "False".
+
 	A switch indicating whether or not to include term definitions.
+
 	If true, definitions are returned for the terms in the result set (if available in the data source).
 	If unique is specified as true, the first definition for each unique set of translation pairs is used.
 
 .Parameter Name
 	This parameter is optional. Mutually exclusive with parameter "Products".
+
 	A string representing the product for which to filter the search results.
+
 	Valid products and versions are returned by the GetProducts switch.
 	If this parameter is omitted, results are not filtered by products and versions.
 	When the Name parameter is provided, the search only includes items from the UiStrings source of translations.
 
 .Parameter Versions
 	This parameter is optional. Used with parameter "Name", mutually exclusive with parameter "Products".
+
 	A array of strings representing the product version for which to filter the search results.
+
 	If the Versions array for a product is null or empty, results matching the product are not filtered by version.
 
 .Parameter Products
 	This parameter is optional. Mutually exclusive with parameters "Name" and "Version".
 	A hashtable representing multiple products for which to filter the search results.
+
 	Example:
+
 		@{Windows = '7','8','8.1' ; 'Windows Server' = '2008','2012'}
+
 	Valid products and versions are returned by the GetProducts method.
+
 	If this parameter is omitted, results are not filtered by products and versions.
 	When the Products parameter is provided, the search only includes items from the UiStrings source of translations.
 
@@ -117,13 +164,18 @@
 
 .Parameter GetLanguages
 	The GetLanguages method returns the list of language friendly names and their codes, supported by the Terminology Service API.
+
 .Parameter Raw
 	This parameter is optional. Default value is "False".
+
 	A switch that controls what data is returned by function.
+
 	If this switch is not present, functon return values are:
+
 		* Translations are returned as array of strings
 		* GetProducts returns hashatble that can be directly used as the "Products" parameter value.
 		* GetLanguages returns hashatble with language friendly name as key and language code as value.
+
 	If this switch is specified, the output is a raw objects returned by the Terminology Service API.
 	They provids more properties (see Microsoft Terminology API SDK PDF in links section), but the objects
 	can't be used directly as parameter values.
@@ -408,4 +460,3 @@ function Get-TerminologyTranslation
 		$tSvc.Dispose()
 	}
 }
-
