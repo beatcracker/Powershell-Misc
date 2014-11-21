@@ -1,15 +1,12 @@
 <#
 .Synopsis
-
 	Look up terminology translations and user-interface translations from actual Microsoft products.
 
 .Link
-
 	http://www.microsoft.com/Language/en-US/Microsoft-Terminology-API.aspx
 	http://download.microsoft.com/download/1/5/D/15D3DDC6-7403-4366-BE99-AF5247ADEF1C/Microsoft-Terminology-API-SDK.pdf
 
 .Description
-
 	Enables user to look up terminology translations and user-interface translations from actual Microsoft products.
 
 	Features:
