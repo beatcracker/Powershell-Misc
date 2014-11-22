@@ -1,13 +1,13 @@
 ﻿<#
 .Synopsis
-	Parse command=line arguments using Win32 API CommandLineToArgvW function.
+	Parse command-line arguments using Win32 API CommandLineToArgvW function.
 
 .Link
 	http://edgylogic.com/blog/powershell-and-external-commands-done-right/
 
 .Description
-    This is the Cmdlet version of the code from the article http://edgylogic.com/blog/powershell-and-external-commands-done-right.
-    It can parse command-line arguments using Win32 API function CommandLineToArgvW . 
+	This is the Cmdlet version of the code from the article http://edgylogic.com/blog/powershell-and-external-commands-done-right.
+	It can parse command-line arguments using Win32 API function CommandLineToArgvW . 
 
 .Parameter CommandLine
 	This parameter is optional.
