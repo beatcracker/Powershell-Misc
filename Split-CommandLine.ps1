@@ -19,29 +19,28 @@
 
 		Description
 		-----------
-        Get the command-line of the current PowerShell host, parse it and return arguments.
+		Get the command-line of the current PowerShell host, parse it and return arguments.
 
 .Example
 	Split-CommandLine -CommandLine '"c:\windows\notepad.exe" test.txt'
 
 		Description
 		-----------
-        Parse user-specified command-line and return arguments.
+		Parse user-specified command-line and return arguments.
 
 .Example
     '"c:\windows\notepad.exe" test.txt',  '%SystemRoot%\system32\svchost.exe -k LocalServiceNetworkRestricted' | Split-CommandLine
 
 		Description
 		-----------
-        Parse user-specified command-line from pipeline input and return arguments.
+		Parse user-specified command-line from pipeline input and return arguments.
 
 .Example
     Get-WmiObject Win32_Process -Filter "Name='notepad.exe'" | Split-CommandLine
 
 		Description
 		-----------
-        Parse user-specified command-line from property name of pipeline input and return arguments.
-        
+		Parse user-specified command-line from property name of the pipeline object and return arguments.
 #>
 function Split-CommandLine
 {
