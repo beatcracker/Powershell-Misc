@@ -2,12 +2,12 @@
 
 ##Table of Contents
 
-- [How to use](####How-To)
-  - [In PowerShell console\PowerShell ISE script pane](#####In PowerShell console\PowerShell ISE script pane)
-  - [In your own script](#####In your own script)
-- [Functions](####Functions)
-  - [Get-TerminologyTranslation](#####Get-TerminologyTranslation.ps1)
-  - [Split-CommandLine](#####Split-CommandLine.ps1)
+- [How to use](#How-To)
+  - [In PowerShell console\PowerShell ISE script pane](#In PowerShell console\PowerShell ISE script pane)
+  - [In your own script](#In your own script)
+- [Functions](#Functions)
+  - [Get-TerminologyTranslation](#Get-TerminologyTranslation.ps1)
+  - [Split-CommandLine](#Split-CommandLine.ps1)
 
 ####How to use
 
