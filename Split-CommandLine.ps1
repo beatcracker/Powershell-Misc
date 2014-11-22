@@ -1,4 +1,4 @@
-﻿<#
+<#
 .Synopsis
 	Parse command-line arguments using Win32 API CommandLineToArgvW function.
 
