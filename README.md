@@ -3,8 +3,8 @@
 ##Table of Contents
 
 - [How to use](#how-to-use)
-  - [In PowerShell console\PowerShell ISE script pane](#In%20PowerShell%20consolePowerShell%20ISE%20script%20pane)
-  - [In your own script](#In%20your%20own%20script)
+  - [In PowerShell console\PowerShell ISE script pane](#in-powershell-consolepowershell-ise-script-pane)
+  - [In your own script](#in-your-own-script)
 - [Functions](#Functions)
   - [Get-TerminologyTranslation](#get-terminologytranslationps1)
   - [Split-CommandLine](#split-commandlineps1)
