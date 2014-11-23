@@ -5,7 +5,7 @@
 - [How to use](#how-to-use)
   - [In PowerShell console\PowerShell ISE script pane](#in-powershell-consolepowershell-ise-script-pane)
   - [In your own script](#in-your-own-script)
-- [Functions](#Functions)
+- [Functions](#functions)
   - [Get-TerminologyTranslation](#get-terminologytranslationps1)
   - [Split-CommandLine](#split-commandlineps1)
 
