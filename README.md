@@ -1,6 +1,6 @@
 #Miscellaneous Powershell goodies
 
-##Table of Contents
+####Table of Contents
 
 - [How to use](#how-to-use)
   - [In PowerShell console\PowerShell ISE script pane](#in-powershell-consolepowershell-ise-script-pane)
