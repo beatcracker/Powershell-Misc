@@ -105,7 +105,7 @@ Features
     * .Net assembly (.dll) - imported using [Add-Type](http://technet.microsoft.com/en-us/library/hh849914.aspx) cmdlet
   * Full comment-based help and usage examples.
 
-WARNING: To import .PS1 scripts this function itself has to be dot-sourced! Example:
+__WARNING: To import .PS1 scripts this function itself has to be dot-sourced!__ Example:
 
 *Note the space between first dot and function name!*
 ```powershell
