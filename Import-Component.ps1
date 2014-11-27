@@ -1,6 +1,6 @@
 <#
 .Synopsis
-	Bulk-import from folder any component, supported by PowerShell (script, module, type). 
+	Bulk-import from folder any component, supported by PowerShell (script, module, source code, .Net assembly). 
 
 .Description
 	Bulk-import from folder any component, supported by PowerShell. Supported components:
