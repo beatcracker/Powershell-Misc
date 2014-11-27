@@ -8,7 +8,7 @@
 - [Functions](#functions)
   - [Get-TerminologyTranslation](#get-terminologytranslationps1)
   - [Split-CommandLine](#split-commandlineps1)
-  - [Import-Component](#import-component.ps1)
+  - [Import-Component](#import-componentps1)
 
 ####How to use
 
