@@ -94,7 +94,7 @@ Features
 
 #####Import-Component.ps1
 
-Bulk-import any component, supported by PowerShell from folder.
+Bulk-import from folder any component, supported by PowerShell (script, module, source code, .Net assembly).
 
 Features
 
