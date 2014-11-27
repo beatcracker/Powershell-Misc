@@ -8,6 +8,7 @@
 - [Functions](#functions)
   - [Get-TerminologyTranslation](#get-terminologytranslationps1)
   - [Split-CommandLine](#split-commandlineps1)
+  - [Import-Component](#import-component.ps1)
 
 ####How to use
 
@@ -90,3 +91,23 @@ Features
 
   * Parse arbitrary command-line, or if none specified, the command-line of the current PowerShell host.
   * Full comment-based help and usage examples.
+
+#####Import-Component.ps1
+
+Bulk-import any component, supported by PowerShell from folder.
+
+Features
+
+  * Supported components:
+    * Script (.ps1) - imported using [Dot-Sourcing](http://ss64.com/ps/source.html).
+    * Module (.psm1) - imported using [Import-Module](http://technet.microsoft.com/en-us/library/hh849725.aspx) cmdlet
+    * Source code (.cs, .vb, .js) - imported using [Add-Type](http://technet.microsoft.com/en-us/library/hh849914.aspx) cmdlet
+    * .Net assembly (.dll) - imported using [Add-Type](http://technet.microsoft.com/en-us/library/hh849914.aspx) cmdlet
+  * Full comment-based help and usage examples.
+
+WARNING: To import .PS1 scripts this function itself has to be dot-sourced! Example:
+
+*Note the space between first dot and function name!*
+```powershell
+. Import-Component 'C:\PsLib'
+```
