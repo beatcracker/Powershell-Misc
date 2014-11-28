@@ -35,7 +35,7 @@
 	The value can be any combination of the following:
 
 	Ps
-		Script (.PS) - imported using Dot-Sourcing.
+		Script (.ps1) - imported using Dot-Sourcing.
 
 	Psm
 		Module (.psm1) - imported using Import-Module cmdlet
