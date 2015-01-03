@@ -178,14 +178,14 @@ function Import-Component
 	{
 		if($Type)
 		{
-			[array]$FileTypeToProcess =  $Type | Sort-Object -Unique | ForEach-Object {$FileType.$_}
+			[array]$FileTypeToImport =  $Type | Sort-Object -Unique | ForEach-Object {$FileType.$_}
 		}
 		else
 		{
-			[array]$FileTypeToProcess = $FileType.GetEnumerator() | ForEach-Object {$_.Value}
+			[array]$FileTypeToImport = $FileType.GetEnumerator() | ForEach-Object {$_.Value}
 		}
 
-		if(($FileTypeToProcess).Extension -contains '.ps1' -and !$IsDotSourced)
+		if(($FileTypeToImport).Extension -contains '.ps1' -and !$IsDotSourced)
 		{
 			Write-Warning "To import .PS1 scripts this function itself has to be dot-sourced! Example: $($Split[$Split.IndexOf($MyCommandName)] = ". $MyCommandName" ; $Split -join '')"
 		}
@@ -202,7 +202,7 @@ function Import-Component
 			}
 		}
 
-		$FileTypeToProcess |
+		$FileTypeToImport |
 			ForEach-Object {
 				$Private:currFT = $_
 				Get-ChildItem -LiteralPath $Path -Filter ('*' + $_.Extension) -Recurse:$Recurse |
