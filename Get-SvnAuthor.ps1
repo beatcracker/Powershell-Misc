@@ -1,4 +1,4 @@
-﻿<#
+<#
 .Synopsis
 	Get list of unique authors in SVN repository.
 
