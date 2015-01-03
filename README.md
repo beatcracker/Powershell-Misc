@@ -9,6 +9,7 @@
   - [Get-TerminologyTranslation](#get-terminologytranslationps1)
   - [Split-CommandLine](#split-commandlineps1)
   - [Import-Component](#import-componentps1)
+  - [Get-SvnAuthor](#get-svnauthorps1)
 
 ####How to use
 
@@ -111,3 +112,12 @@ __WARNING: To import .PS1 scripts this function itself has to be dot-sourced!__ 
 ```powershell
 . Import-Component 'C:\PsLib'
 ```
+
+#####Get-SvnAuthor.ps1
+
+Get list of unique commit authors in one or more SVN repositories. Requires Subversion binaries. Can be used to create authors file for SVN to Git migrations.
+
+Features
+
+  * Get list of unique authors in one or more SVN repositories.
+  * Full comment-based help and usage examples.
