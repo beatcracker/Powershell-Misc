@@ -10,6 +10,7 @@
   - [Split-CommandLine](#split-commandlineps1)
   - [Import-Component](#import-componentps1)
   - [Get-SvnAuthor](#get-svnauthorps1)
+- [Scripts](#scripts)
 
 ####How to use
 
@@ -65,7 +66,7 @@ Or put it alongside with your script, get path to the script folder programmatic
 
 ```powershell
 $ScriptDir = Split-Path $script:MyInvocation.MyCommand.Path
-. $ScriptDir\Get-TerminologyTranslation.ps1
+. (Join-Path -Path $ScriptDir -ChildPath 'Get-TerminologyTranslation.ps1')
 Get-TerminologyTranslation -Text 'Control Panel' -From 'en-us' -To 'ru-ru' -Source Terms
 
 ```
@@ -120,4 +121,16 @@ Get list of unique commit authors in one or more SVN repositories. Requires Subv
 Features
 
   * Get list of unique commit authors in one or more SVN repositories.
+  * Full comment-based help and usage examples.
+
+####Scripts
+
+#####`New-GitSvnAuthorsFile.ps1`
+
+	Generate authors file for one or more SVN repositories to assist SVN to Git migrations.	Can map SVN authors to domain accounts and get full names and emails from Active Directiry. Requires Subversion binaries and [Get-SvnAuthor](#get-svnauthorps1) function.
+
+Features
+
+  * Generate authors file for one or more SVN repositories
+  * Map SVN authors to domain accounts and get full names and emails from Active Directiry
   * Full comment-based help and usage examples.
