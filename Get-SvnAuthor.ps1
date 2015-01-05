@@ -1,9 +1,9 @@
 <#
 .Synopsis
-	Get list of unique authors in SVN repository.
+	Get list of unique commit authors in SVN repository.
 
 .Description
-	Get list of unique authors in one or more SVN repositories. Requires Subversion binaries.
+	Get list of unique commit authors in one or more SVN repositories. Requires Subversion binaries.
 
 .Parameter Url
 	This parameter is required.
@@ -30,35 +30,35 @@
 
 	Description
 	-----------
-	Get list of unique authors for SVN repository http://svnserver/svn/project
+	Get list of unique commit authors for SVN repository http://svnserver/svn/project
 
 .Example
 	Get-SvnAuthor -Url 'http://svnserver/svn/project' -User john -Password doe
 
 	Description
 	-----------
-	Get list of unique authors for SVN repository http://svnserver/svn/project using username and password.
+	Get list of unique commit authors for SVN repository http://svnserver/svn/project using username and password.
 
 .Example
 	Get-SvnAuthor -Url 'http://svnserver/svn/project' -SvnPath 'C:\Program Files (x86)\VisualSVN Server\bin\svn.exe'
 
 	Description
 	-----------
-	Get list of unique authors for SVN repository http://svnserver/svn/project using custom svn.exe binary.
+	Get list of unique commit authors for SVN repository http://svnserver/svn/project using custom svn.exe binary.
 
 .Example
 	Get-SvnAuthor -Url 'http://svnserver/svn/project_1', 'http://svnserver/svn/project_2'
 
 	Description
 	-----------
-	Get list of unique authors for two SVN repositories: http://svnserver/svn/project_1 and http://svnserver/svn/project_2.
+	Get list of unique commit authors for two SVN repositories: http://svnserver/svn/project_1 and http://svnserver/svn/project_2.
 
 .Example
 	'http://svnserver/svn/project_1', 'http://svnserver/svn/project_2' | Get-SvnAuthor
 
 	Description
 	-----------
-	Get list of unique authors for two SVN repositories: http://svnserver/svn/project_1 and http://svnserver/svn/project_2.
+	Get list of unique commit authors for two SVN repositories: http://svnserver/svn/project_1 and http://svnserver/svn/project_2.
 #>
 function Get-SvnAuthor
 {
