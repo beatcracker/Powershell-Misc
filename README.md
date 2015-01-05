@@ -71,7 +71,7 @@ Get-TerminologyTranslation -Text 'Control Panel' -From 'en-us' -To 'ru-ru' -Sour
 ```
 ####Functions
 
-#####Get-TerminologyTranslation.ps1
+#####`Get-TerminologyTranslation.ps1`
 
 Enables user to look up terminology translations and user-interface translations from actual Microsoft products via [Microsoft Terminology Service API](http://www.microsoft.com/Language/en-US/Microsoft-Terminology-API.aspx). For details see [ Terminology Service API SDK PDF](http://download.microsoft.com/download/1/5/D/15D3DDC6-7403-4366-BE99-AF5247ADEF1C/Microsoft-Terminology-API-SDK.pdf).
 
@@ -84,7 +84,7 @@ Features
   * Get list of products supported by the Terminology Service API.
   * Full comment-based help and usage examples.
 
-#####Split-CommandLine.ps1
+#####`Split-CommandLine.ps1`
 
 This is the Cmdlet version of the code from the article [PowerShell and external commands done right](http://edgylogic.com/blog/powershell-and-external-commands-done-right). It can parse command-line arguments using Win32 API function [CommandLineToArgvW](http://msdn.microsoft.com/en-us/library/windows/desktop/bb776391.aspx).
 
@@ -93,7 +93,7 @@ Features
   * Parse arbitrary command-line, or if none specified, the command-line of the current PowerShell host.
   * Full comment-based help and usage examples.
 
-#####Import-Component.ps1
+#####`Import-Component.ps1`
 
 Bulk-import from folder any component, supported by PowerShell (script, module, source code, .Net assembly).
 
@@ -113,11 +113,11 @@ __WARNING: To import .PS1 scripts this function itself has to be dot-sourced!__ 
 . Import-Component 'C:\PsLib'
 ```
 
-#####Get-SvnAuthor.ps1
+#####`Get-SvnAuthor.ps1`
 
 Get list of unique commit authors in one or more SVN repositories. Requires Subversion binaries. Can be used to create authors file for SVN to Git migrations.
 
 Features
 
-  * Get list of unique authors in one or more SVN repositories.
+  * Get list of unique commit authors in one or more SVN repositories.
   * Full comment-based help and usage examples.
