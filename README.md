@@ -11,6 +11,7 @@
   - [Import-Component](#import-componentps1)
   - [Get-SvnAuthor](#get-svnauthorps1)
 - [Scripts](#scripts)
+  - [New-GitSvnAuthorsFile](#new-gitsvnauthorsfileps1)
 
 ####How to use
 
