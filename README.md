@@ -128,7 +128,7 @@ Features
 
 #####`New-GitSvnAuthorsFile.ps1`
 
-	Generate authors file for one or more SVN repositories to assist SVN to Git migrations.	Can map SVN authors to domain accounts and get full names and emails from Active Directiry. Requires Subversion binaries and [Get-SvnAuthor](#get-svnauthorps1) function.
+Generate authors file for one or more SVN repositories to assist SVN to Git migrations.	Can map SVN authors to domain accounts and get full names and emails from Active Directiry. Requires Subversion binaries and [Get-SvnAuthor](#get-svnauthorps1) function.
 
 Features
 
