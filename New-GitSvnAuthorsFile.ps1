@@ -76,7 +76,6 @@
 	Description
 	-----------
 	Create authors list for SVN repository http://svnserver/svn/project.
-	Map SVN authors to domain accounts and get full names and emails from Active Directiry.
 	No authors file will be created, instead script will return collection of objects.
 
 .Example
