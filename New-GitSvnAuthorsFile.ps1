@@ -118,7 +118,7 @@
 	Create authors file for two SVN repositories: http://svnserver/svn/project_1 and http://svnserver/svn/project_2.
 	New authors file will be created in the script directory.
 #>
-[CmdletBinding()]
+[CmdletBinding(DefaultParameterSetName = 'Save')]
 Param
 (
 	[Parameter(Mandatory = $true, ValueFromPipeline = $true, ValueFromPipelineByPropertyName = $true, ParameterSetName = 'Save')]
