@@ -55,12 +55,12 @@
 .Parameter Include
 	This parameter is optional.
 
-	An array of strings. Only file names that match will be imported. Wildcards are permitted.
+	An array of strings. Only file names without extension that match will be imported. Wildcards are permitted.
 
 .Parameter Exclude
 	This parameter is optional.
 
-	An array of strings. File names that match will not be imported. Has priority over the Include parameter.
+	An array of strings. File names without extension that match will not be imported. Has priority over the Include parameter.
 	Wildcards are permitted.
 
 .Example
@@ -93,8 +93,8 @@
 		Description
 		-----------
 		Import all supported components (.ps1, .psm1, .cs, .vb, .js, .dll), recurse into subdirectories.
-		Include only files with names that match wildcard 'MyScript*'. Note, that to be able to import .ps1
-		scripts into the current scope, this function is dot-sourced.
+		Include only files with names without extension that match wildcard 'MyScript*'.
+		Note, that to be able to import .ps1 scripts into the current scope, this function is dot-sourced.
 
 .Example
 	. Import-Component 'C:\PsLib' -Recurse -Include 'MyScript*' -Exclude '*_backup*'
@@ -102,8 +102,8 @@
 		Description
 		-----------
 		Import all supported components (.ps1, .psm1, .cs, .vb, .js, .dll), recurse into subdirectories.
-		Include only files with names that match wildcard 'MyScript*'.
-		Exclude files with names that match '*_backup*' wildcard.
+		Include only files with names without extension that match wildcard 'MyScript*'.
+		Exclude files with names without extension that match '*_backup*' wildcard.
 		Note, that to be able to import .ps1 scripts into the current scope, this function is dot-sourced.
 
 .Example
@@ -112,8 +112,8 @@
 		Description
 		-----------
 		Import all supported components (.ps1, .psm1, .cs, .vb, .js, .dll), recurse into subdirectories.
-		Include only files with names that match wildcards 'MyScript*' and '*MyLib*'.
-		Exclude files with names that match '*_backup*' and '*_old*' wildcards.
+		Include only files with names without extension that match wildcards 'MyScript*' and '*MyLib*'.
+		Exclude files with names without extension that match '*_backup*' and '*_old*' wildcards.
 		Note, that to be able to import .ps1 scripts into the current scope, this function is dot-sourced.
 
 .Example
@@ -194,8 +194,8 @@ function Import-Component
 			if
 			(
 				!($_.PSIsContainer) -and 
-				$($tmp = $_.Name ; $Exclude | ForEach-Object {if($tmp -notlike $_){$true}}) -and
-				$($tmp = $_.Name ; $Include | ForEach-Object {if($tmp -like $_){$true}})
+				$($tmp = $_.BaseName ; $Exclude | ForEach-Object {if($tmp -notlike $_){$true}}) -and
+				$($tmp = $_.BaseName ; $Include | ForEach-Object {if($tmp -like $_){$true}})
 			)
 			{
 				$_
