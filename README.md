@@ -2,18 +2,21 @@
 
 ####Table of Contents
 
-- [How to use](#how-to-use)
+- [How to use Functions\Scripts](#how-to-use-functionsscripts)
   - [In PowerShell console\PowerShell ISE script pane](#in-powershell-consolepowershell-ise-script-pane)
   - [In your own script](#in-your-own-script)
+- [How to use Modules](#how-to-use-modules)
 - [Functions](#functions)
   - [Get-TerminologyTranslation](#get-terminologytranslationps1)
   - [Split-CommandLine](#split-commandlineps1)
   - [Import-Component](#import-componentps1)
   - [Get-SvnAuthor](#get-svnauthorps1)
+- [Modules](#modules)
+  - [PsIniParser](#psiniparser)
 - [Scripts](#scripts)
   - [New-GitSvnAuthorsFile](#new-gitsvnauthorsfileps1)
 
-####How to use
+####How to use Functions\Scripts
 
 The best way to use provided functions is a [dot-sourcing](http://ss64.com/ps/source.html).
 
@@ -71,6 +74,27 @@ $ScriptDir = Split-Path $script:MyInvocation.MyCommand.Path
 Get-TerminologyTranslation -Text 'Control Panel' -From 'en-us' -To 'ru-ru' -Source Terms
 
 ```
+
+####How to use Modules
+Download\clone this repository and copy module folder to your PowerShell modules folder. If you downloaded repository as ZIP file, you need to unblock it first:
+
+* Using GUI: right-click ZIP file, click `Properties` and then click the `Unblock` button.
+* Using PowerShell: `Unblock-File 'X:\Path\to\file.zip'`
+
+PowerShell looks for the modules in several locations, all of which are stored in the `$env:PSModulePath` variable. Default locations are:
+  * System-wide:
+    * `C:\Program Files\WindowsPowerShell\Modules`
+    * `C:\Windows\system32\WindowsPowerShell\v1.0\Modules\`
+  * Per-user:
+    * `C:\Users\USERNAME\Documents\WindowsPowerShell\Modules`
+
+Modules stored in those locations are easily discoverable and autoloaded with PowerShell 3.0 and higher. If you're not sure, copy module to your *Per-user* folder.
+
+* To list all available modules, use: `Get-Module -ListAvailable`
+* To import available module, use: `Import-Module -Name 'ModuleName'`
+
+Alternatively, you can import module from any location: `Import-Module -Name 'X:\Path\to\module_folder'`
+
 ####Functions
 
 #####`Get-TerminologyTranslation.ps1`
@@ -123,6 +147,27 @@ Features
 
   * Get list of unique commit authors in one or more SVN repositories.
   * Full comment-based help and usage examples.
+
+####Modules
+
+#####`PsIniParser`
+
+This module allows to import, export and convert INI files (and strings) to hashtables (or objects) and vice versa. You can specify various parsing options (INI files are not standardized), or use specific encoding while reading a file.
+
+Features
+
+  * Provided cmdlets mimic native PowerShell ones (Import-\*, Export-\*, ConvertTo-\*, ConvertFrom-\*)
+  * Uses actively supported [INI File Parser](https://github.com/rickyah/ini-parser) by Ricardo Amores Hernández.
+  * Highly configurable, can read and write non-standard INI files
+  * Supports any available .Net encoding for reading and writing files (unlike Windows' native functions and their PInvoke wrappers that have [very limited Unicode support](http://www.siao2.com/2006/09/15/754992.aspx).)
+  * Full comment-based help and usage examples.
+
+Usage examples:
+
+* Import INI file as hashtable: `C:\Windows\System.ini | Import-Ini`
+* Convert INI string to hashtable: ``"[Section]`nKey=Value" | ConvertFrom-Ini``
+* Export hashtable to INI file: `@{Section = @{Key = 'Value'}} | Export-Ini -Path '.\My.ini'`
+* Convert hashtable to INI string: `@{Section = @{Key = 'Value'}} | ConvertTo-Ini`
 
 ####Scripts
 
