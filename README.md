@@ -81,7 +81,7 @@ Download\clone this repository and copy module folder to your PowerShell modules
 * Using GUI: right-click ZIP file, click `Properties` and then click the `Unblock` button.
 * Using PowerShell: `Unblock-File 'X:\Path\to\file.zip'`
 
-PowerShell looks for the modules in several locations, all of which are stored in the `$env:PSModulePath` variable. Default locations are:
+PowerShell will look in the paths specified in the `$env:PSModulePath` environment variable when searching for available modules on a system. Default locations are:
   * System-wide:
     * `C:\Program Files\WindowsPowerShell\Modules`
     * `C:\Windows\system32\WindowsPowerShell\v1.0\Modules\`
@@ -90,10 +90,19 @@ PowerShell looks for the modules in several locations, all of which are stored i
 
 Modules stored in those locations are easily discoverable and autoloaded with PowerShell 3.0 and higher. If you're not sure, copy module to your *Per-user* folder.
 
-* To list all available modules, use: `Get-Module -ListAvailable`
-* To import available module, use: `Import-Module -Name 'ModuleName'`
+* To list all available modules, use:
+```powershell
+Get-Module -ListAvailable`
+```
+* To import available module, use:
+```powershell
+Import-Module -Name 'ModuleName'
+```
 
-Alternatively, you can import module from any location: `Import-Module -Name 'X:\Path\to\module_folder'`
+Alternatively, you can import module from any location:
+```powershell
+Import-Module -Name 'X:\Path\to\module_folder'
+```
 
 ####Functions
 
