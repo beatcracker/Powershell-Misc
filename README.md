@@ -1,4 +1,4 @@
-#Miscellaneous Powershell goodies
+#Miscellaneous PowerShell goodies
 
 ####Table of Contents
 
