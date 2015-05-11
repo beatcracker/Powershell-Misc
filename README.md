@@ -164,10 +164,22 @@ Features
 
 Usage examples:
 
-* Import INI file as hashtable: `C:\Windows\System.ini | Import-Ini`
-* Convert INI string to hashtable: ``"[Section]`nKey=Value" | ConvertFrom-Ini``
-* Export hashtable to INI file: `@{Section = @{Key = 'Value'}} | Export-Ini -Path '.\My.ini'`
-* Convert hashtable to INI string: `@{Section = @{Key = 'Value'}} | ConvertTo-Ini`
+* Import INI file as hashtable:
+```powershell
+C:\Windows\System.ini | Import-Ini
+```
+* Convert INI string to hashtable:
+```powershell
+"[Section]`nKey=Value" | ConvertFrom-Ini
+```
+* Export hashtable to INI file:
+```powershell
+@{Section = @{Key = 'Value'}} | Export-Ini -Path '.\My.ini'
+```
+* Convert hashtable to INI string:
+```powershell
+@{Section = @{Key = 'Value'}} | ConvertTo-Ini
+```
 
 ####Scripts
 
