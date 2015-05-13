@@ -80,8 +80,8 @@ function Parse-Ini
         Write-Verbose 'Creating new IniParser objects...'
         try
         {
-            $FileIniParser = [IniParser.FileIniDataParser]::new()
-            $StringIniParser = [IniParser.StringIniParser]::new()
+            $FileIniParser = New-Object -TypeName IniParser.FileIniDataParser
+            $StringIniParser = New-Object -TypeName IniParser.StringIniParser
         }
         catch
         {
@@ -182,7 +182,7 @@ function Parse-Ini
             else
             {
                 # 'Ordered' hashtable, PS 2.0 compatible
-                $IniHashtable = [System.Collections.Specialized.OrderedDictionary]::new()
+                $IniHashtable = New-Object -TypeName System.Collections.Specialized.OrderedDictionary
 
                 if($IniObject.Global.Count)
                 {
@@ -201,7 +201,7 @@ function Parse-Ini
                     ForEach-Object {
 
                         # 'Ordered' hashtable, PS 2.0 compatible
-                        $IniSectionHashtable = [System.Collections.Specialized.OrderedDictionary]::new()
+                        $IniSectionHashtable = New-Object -TypeName System.Collections.Specialized.OrderedDictionary
                         $_.Keys.GetEnumerator() |
                         ForEach-Object {
                             $IniSectionHashtable.Add($_.KeyName, $_.Value)
@@ -298,8 +298,8 @@ function Serialize-Ini # Export-Ini and ConvertTo-Ini
         Write-Verbose 'Creating new IniParser objects...'
         try
         {
-            $IniParser = [IniParser.FileIniDataParser]::new()
-            $IniData = [IniParser.Model.IniDataCaseInsensitive]::new()
+            $IniParser = New-Object -TypeName IniParser.FileIniDataParser
+            $IniData = New-Object -TypeName IniParser.Model.IniDataCaseInsensitive
         }
         catch
         {
@@ -460,7 +460,7 @@ function ConvertHashtable-ToIni
 
         [Parameter(ValueFromPipelineByPropertyName = $true)]
         [ValidateNotNullOrEmpty()]
-        $IniData = [IniParser.Model.IniDataCaseInsensitive]::new(),
+        $IniData = (New-Object -TypeName IniParser.Model.IniDataCaseInsensitive),
 
         [Parameter(ValueFromPipelineByPropertyName = $true)]
         [ValidateNotNullOrEmpty()]
@@ -763,7 +763,7 @@ function New-CommentBasedHelp
         if($Command = Get-Command -Name $CommandName -ErrorAction SilentlyContinue)
         {
             Write-Debug "Getting command metadata for: $CommandName"
-            $CommandMetaData = [System.Management.Automation.CommandMetaData]::new($Command)
+            $CommandMetaData = New-Object -TypeName System.Management.Automation.CommandMetaData -ArgumentList $Command
         }
         else
         {
@@ -874,10 +874,10 @@ function New-ProxyCommandFromParameterSet
     Process
     {
         Write-Debug "Getting command metadata for: $CommandName"
-        $BaseCommandMetaData = [System.Management.Automation.CommandMetaData]::new((Get-Command -Name $CommandName))
+        $BaseCommandMetaData = New-Object -TypeName System.Management.Automation.CommandMetaData -ArgumentList (Get-Command -Name $CommandName)
 
         Write-Debug "Deep cloning command metadata for proxy command: $ProxyCommandName"
-        $ProxyCommandMetaData = [System.Management.Automation.CommandMetadata]::new($BaseCommandMetaData)
+        $ProxyCommandMetaData = New-Object -TypeName System.Management.Automation.CommandMetadata -ArgumentList $BaseCommandMetaData
 
         Write-Debug 'Enumerating parameters'
         ($ProxyCommandMetaData.Parameters | Select-Object -ExpandProperty Keys) |
