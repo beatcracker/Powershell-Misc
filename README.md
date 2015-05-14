@@ -1,4 +1,4 @@
-﻿#Miscellaneous PowerShell goodies
+#Miscellaneous PowerShell goodies
 
 ####Table of Contents
 
@@ -11,10 +11,10 @@
   - [Split-CommandLine](#split-commandlineps1)
   - [Import-Component](#import-componentps1)
   - [Get-SvnAuthor](#get-svnauthorps1)
-- [Modules](#modules)
-  - [PsIniParser](#psiniparser)
 - [Scripts](#scripts)
   - [New-GitSvnAuthorsFile](#new-gitsvnauthorsfileps1)
+- [Modules](#modules)
+  - [PsIniParser](#psiniparser)
 
 ####How to use Functions\Scripts
 
@@ -119,14 +119,62 @@ Features
   * Get list of products supported by the Terminology Service API.
   * Full comment-based help and usage examples.
 
+Usage examples:
+
+* Ever wonder how [Cherokee](http://en.wikipedia.org/wiki/Cherokee) spell `Start menu`?
+```powershell
+'Start menu' | Get-TerminologyTranslation -From 'en-us' -To 'chr-cher-us' -Source Both
+
+ᎠᏂᎩᏍᏙᏗ ᏗᏑᏰᏍᏗᎢ
+```
+
+* What is `Control panel` in French?
+```powershell
+'Control panel' | Get-TerminologyTranslation -From 'en-us' -To 'fr-fr' -Source Both
+
+Panneau de configuration
+```
+
+* How about `Fatal Error` in German?
+```powershell
+'Fatal error' | Get-TerminologyTranslation -From 'en-us' -To 'de-de' -Source Both
+
+Schwerwiegender Fehler
+```
+
+* You've got a cyrillic SharePoint installation and wonder where the hell is `Application Management` in SharePoint Central Administration?
+```powershell
+'Application Management' | Get-TerminologyTranslation -From 'en-us' -To 'ru-ru' -Source 'UiStrings' -Name 'SharePoint Server'
+
+Управление приложениями
+```
+
 #####`Split-CommandLine.ps1`
 
-This is the Cmdlet version of the code from the article [PowerShell and external commands done right](http://edgylogic.com/blog/powershell-and-external-commands-done-right). It can parse command-line arguments using Win32 API function [CommandLineToArgvW](http://msdn.microsoft.com/en-us/library/windows/desktop/bb776391.aspx).
+PowerShell version of [EchoArgs](http://blogs.technet.com/b/heyscriptingguy/archive/2011/09/20/solve-problems-with-external-command-lines-in-powershell.aspx). This is the Cmdlet version of the code from the article [PowerShell and external commands done right](http://edgylogic.com/blog/powershell-and-external-commands-done-right). It can parse command-line arguments using Win32 API function [CommandLineToArgvW](http://msdn.microsoft.com/en-us/library/windows/desktop/bb776391.aspx) and echo command line arguments back out to the console for your review.
 
 Features
 
   * Parse arbitrary command-line, or if none specified, the command-line of the current PowerShell host.
   * Full comment-based help and usage examples.
+
+Usage examples:
+
+* Parse user-specified command-line
+```powershell
+'"c:\windows\notepad.exe" test.txt' | Split-CommandLine
+
+c:\windows\notepad.exe
+test.txt
+```
+
+* Parse command-line of the live process
+```powershell
+Get-WmiObject Win32_Process -Filter "Name='notepad.exe'" | Split-CommandLine
+
+c:\windows\notepad.exe
+test.txt
+```
 
 #####`Import-Component.ps1`
 
@@ -148,6 +196,14 @@ __WARNING: To import .PS1 scripts this function itself has to be dot-sourced!__ 
 . Import-Component 'C:\PsLib'
 ```
 
+Usage example
+
+* Import all supported components (`.ps1`, `.psm1`, `.cs`, `.vb`, `.js`, `.dll`), recurse into subdirectories. Include only files with names without extension that match wildcards `MyScript*` and `*MyLib*`. Exclude files with names without extension that match `*_backup*` and `*_old*` wildcards.
+
+```powershell
+. Import-Component 'C:\PsLib' -Recurse -Include 'MyScript*','*MyLib*' -Exclude '*_backup*','*_old*'
+```
+
 #####`Get-SvnAuthor.ps1`
 
 Get list of unique commit authors in one or more SVN repositories. Requires Subversion binaries. Can be used to create authors file for SVN to Git migrations.
@@ -156,6 +212,39 @@ Features
 
   * Get list of unique commit authors in one or more SVN repositories.
   * Full comment-based help and usage examples.
+
+Usage example
+
+* Get list of unique commit authors for SVN repository `http://svnserver/svn/project`
+
+```powershell
+'http://svnserver/svn/project' | Get-SvnAuthor
+
+John Doe
+Jane Doe
+
+```
+
+####Scripts
+
+#####`New-GitSvnAuthorsFile.ps1`
+
+Generate authors file for one or more SVN repositories to assist SVN to Git migrations.	Can map SVN authors to domain accounts and get full names and emails from Active Directory. Requires Subversion binaries and [Get-SvnAuthor](#get-svnauthorps1) function.
+
+Features
+
+  * Generate authors file for one or more SVN repositories
+  * Map SVN authors to domain accounts and get full names and emails from Active Directory
+  * Full comment-based help and usage examples.
+
+Usage example
+
+* Create authors file for SVN repository `http://svnserver/svn/project`. New authors file will be created as `c:\authors.txt`
+
+```powershell
+'http://svnserver/svn/project' | New-GitSvnAuthorsFile -Path c:\authors.txt
+
+```
 
 ####Modules
 
@@ -239,14 +328,3 @@ Key@Value
 ```powershell
 @{Section = @{Key = 'Value'}} | ConvertTo-Ini -SectionStartChar '{' -SectionEndChar '}' -KeyValueAssigmentChar '@'
 ```
-####Scripts
-
-#####`New-GitSvnAuthorsFile.ps1`
-
-Generate authors file for one or more SVN repositories to assist SVN to Git migrations.	Can map SVN authors to domain accounts and get full names and emails from Active Directory. Requires Subversion binaries and [Get-SvnAuthor](#get-svnauthorps1) function.
-
-Features
-
-  * Generate authors file for one or more SVN repositories
-  * Map SVN authors to domain accounts and get full names and emails from Active Directory
-  * Full comment-based help and usage examples.
