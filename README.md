@@ -92,7 +92,7 @@ Modules stored in those locations are easily discoverable and autoloaded with Po
 
 * To list all available modules, use:
 ```powershell
-Get-Module -ListAvailable`
+Get-Module -ListAvailable
 ```
 * To import available module, use:
 ```powershell
