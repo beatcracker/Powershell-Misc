@@ -20,204 +20,216 @@ $Obj = Add-Type -Path '.\INIFileParser.dll' -PassThru
 #>
 function Parse-Ini
 {
-    [CmdletBinding(DefaultParameterSetName = 'String')]
-    Param
-    (
-        [Parameter(Mandatory = $true, ValueFromPipeline = $true, ValueFromPipelineByPropertyName = $true, ParameterSetName = 'File', Position = 0)]
-        [ValidateNotNullOrEmpty()]
-        [Alias('FullName')]
-        [string[]]$Path,
+	[CmdletBinding(DefaultParameterSetName = 'String')]
+	Param
+	(
+		[Parameter(Mandatory = $true, ValueFromPipeline = $true, ValueFromPipelineByPropertyName = $true, ParameterSetName = 'File', Position = 0)]
+		[ValidateNotNullOrEmpty()]
+		[Alias('FullName')]
+		[string[]]$Path,
 
-        [Parameter(Mandatory = $true, ValueFromPipeline = $true, ValueFromPipelineByPropertyName = $true, ParameterSetName = 'String', Position = 0)]
-        [AllowEmptyString()]
-        [string[]]$InputObject,
+		[Parameter(Mandatory = $true, ValueFromPipeline = $true, ValueFromPipelineByPropertyName = $true, ParameterSetName = 'String', Position = 0)]
+		[AllowEmptyString()]
+		[string[]]$InputObject,
 
-        [Parameter(ValueFromPipelineByPropertyName = $true, ParameterSetName = 'File', Position = 1)]
-        [Parameter(ValueFromPipelineByPropertyName = $true, ParameterSetName = 'String', Position = 1)]
-        [ValidateNotNullOrEmpty()]
-        [string[]]$CommentStrings = @(';', '#'),
+		[Parameter(ValueFromPipelineByPropertyName = $true, ParameterSetName = 'File', Position = 1)]
+		[Parameter(ValueFromPipelineByPropertyName = $true, ParameterSetName = 'String', Position = 1)]
+		[ValidateNotNullOrEmpty()]
+		[string[]]$CommentStrings = @(';', '#'),
 
-        [Parameter(ValueFromPipelineByPropertyName = $true, ParameterSetName = 'File', Position = 2)]
-        [Parameter(ValueFromPipelineByPropertyName = $true, ParameterSetName = 'String', Position = 2)]
-        [ValidateLength(1, 1)]
-        [ValidateNotNullOrEmpty()]
-        [string]$SectionStartChar = '[',
+		[Parameter(ValueFromPipelineByPropertyName = $true, ParameterSetName = 'File', Position = 2)]
+		[Parameter(ValueFromPipelineByPropertyName = $true, ParameterSetName = 'String', Position = 2)]
+		[ValidateLength(1, 1)]
+		[ValidateNotNullOrEmpty()]
+		[string]$SectionStartChar = '[',
 
-        [Parameter(ValueFromPipelineByPropertyName = $true, ParameterSetName = 'File', Position = 3)]
-        [Parameter(ValueFromPipelineByPropertyName = $true, ParameterSetName = 'String', Position = 3)]
-        [ValidateLength(1, 1)]
-        [ValidateNotNullOrEmpty()]
-        [string]$SectionEndChar = ']',
+		[Parameter(ValueFromPipelineByPropertyName = $true, ParameterSetName = 'File', Position = 3)]
+		[Parameter(ValueFromPipelineByPropertyName = $true, ParameterSetName = 'String', Position = 3)]
+		[ValidateLength(1, 1)]
+		[ValidateNotNullOrEmpty()]
+		[string]$SectionEndChar = ']',
 
-        [Parameter(ValueFromPipelineByPropertyName = $true, ParameterSetName = 'File', Position = 4)]
-        [Parameter(ValueFromPipelineByPropertyName = $true, ParameterSetName = 'String', Position = 4)]
-        [ValidateLength(1, 1)]
-        [ValidateNotNullOrEmpty()]
-        [string]$KeyValueAssigmentChar = '=',
+		[Parameter(ValueFromPipelineByPropertyName = $true, ParameterSetName = 'File', Position = 4)]
+		[Parameter(ValueFromPipelineByPropertyName = $true, ParameterSetName = 'String', Position = 4)]
+		[ValidateLength(1, 1)]
+		[ValidateNotNullOrEmpty()]
+		[string]$KeyValueAssigmentChar = '=',
 
-        [Parameter(ValueFromPipelineByPropertyName = $true, ParameterSetName = 'File', Position = 5)]
-        [Parameter(ValueFromPipelineByPropertyName = $true, ParameterSetName = 'String', Position = 5)]
-        [switch]$OverrideDuplicateKeys,
+		[Parameter(ValueFromPipelineByPropertyName = $true, ParameterSetName = 'File', Position = 5)]
+		[Parameter(ValueFromPipelineByPropertyName = $true, ParameterSetName = 'String', Position = 5)]
+		[switch]$OverrideDuplicateKeys,
 
-        [Parameter(ValueFromPipelineByPropertyName = $true, ParameterSetName = 'File', Position = 6)]
-        [string]$Encoding,
+		[Parameter(ValueFromPipelineByPropertyName = $true, ParameterSetName = 'File', Position = 6)]
+		[string]$Encoding,
 
-        [Parameter(ValueFromPipelineByPropertyName = $true, ParameterSetName = 'File', Position = 7)]
-        [Parameter(ValueFromPipelineByPropertyName = $true, ParameterSetName = 'String', Position = 6)]
-        [switch]$AsObject
+		[Parameter(ValueFromPipelineByPropertyName = $true, ParameterSetName = 'File', Position = 7)]
+		[Parameter(ValueFromPipelineByPropertyName = $true, ParameterSetName = 'String', Position = 6)]
+		[switch]$AsObject
 
-        <# Reserved for future use
+		<# Reserved for future use
 
-        [Parameter(ValueFromPipelineByPropertyName = $true)]
-        [ValidateNotNullOrEmpty()]
-        [string]$AssigmentSpacer = '',
+			[Parameter(ValueFromPipelineByPropertyName = $true)]
+			[ValidateNotNullOrEmpty()]
+			[string]$AssigmentSpacer = '',
 
-        #>
-    )
+		#>
+	)
 
-    Begin
-    {
-        Write-Verbose 'Creating new IniParser objects...'
-        try
-        {
-            $FileIniParser = New-Object -TypeName IniParser.FileIniDataParser
-            $StringIniParser = New-Object -TypeName IniParser.StringIniParser
-        }
-        catch
-        {
-            throw $_
-        }
+	Begin
+	{
+		Write-Verbose 'Creating new IniParser objects...'
+		try
+		{
+			$FileIniParser = New-Object -TypeName IniParser.FileIniDataParser
+			$StringIniParser = New-Object -TypeName IniParser.StringIniParser
+		}
+		catch
+		{
+			throw $_
+		}
 
-    }
+	}
 
-    Process
-    {
-        try
-        {
-            if($Path)
-            {
-                Write-Verbose 'Using FileIniDataParser'
-                $IniParser = $FileIniParser
-            }
-            else
-            {
-                Write-Verbose 'Using StringIniParser'
-                $IniParser = $StringIniParser
-            }
-        }
-        catch
-        {
-            throw $_
-        }
+	Process
+	{
+		# Kludge to allow pipeline input from Import-Ini
+		# Otherwise, it lands in the InputObject parameter
+		if
+		(
+			($PSCmdlet.MyInvocation.InvocationName -eq 'Import-Ini') -and
+			$PSCmdlet.MyInvocation.ExpectingInput
+		)
+		{
+			Write-Debug 'Activating kludge to allow pipeline input from Import-Ini'
+			$Path, $InputObject = $InputObject, $Path
+		}
 
-        #region Configure IniParser
+		try
+		{
+			if($Path)
+			{
+				Write-Verbose 'Using FileIniDataParser'
+				$IniParser = $FileIniParser
+			}
+			else
+			{
+				Write-Verbose 'Using StringIniParser'
+				$IniParser = $StringIniParser
+			}
+		}
+		catch
+		{
+			throw $_
+		}
 
-        Write-Verbose 'Mapping parameters to IniParser configuration'
-        $CommentRegexTemplate = '^({0})(.*)'
-        $IniParserCfg = @{
-            CommentRegex = $CommentRegexTemplate -f (
-                # Build a CommentRegex from the CommentString values
-                (($CommentStrings | Select-Object -First ($CommentStrings.Count - 1) | ForEach-Object {[regex]::Escape($_) ; '|'}) + [regex]::Escape($CommentStrings[-1])) -join ''
-            )
-            SectionStartChar = $SectionStartChar
-            SectionEndChar = $SectionEndChar
-            CaseInsensitive = $true
-            KeyValueAssigmentChar = $KeyValueAssigmentChar
-            AllowKeysWithoutSection = $true
-            AllowDuplicateKeys = $true
-            OverrideDuplicateKeys = $OverrideDuplicateKeys
-            AllowDuplicateSections = $true
-            SkipInvalidLines = $true
+		#region Configure IniParser
 
-            <# Not used
+		Write-Verbose 'Mapping parameters to IniParser configuration'
+		$CommentRegexTemplate = '^({0})(.*)'
+		$IniParserCfg = @{
+			CommentRegex = $CommentRegexTemplate -f (
+				# Build a CommentRegex from the CommentString values
+				(($CommentStrings | Select-Object -First ($CommentStrings.Count - 1) | ForEach-Object {[regex]::Escape($_) ; '|'}) + [regex]::Escape($CommentStrings[-1])) -join ''
+			)
+			SectionStartChar = $SectionStartChar
+			SectionEndChar = $SectionEndChar
+			CaseInsensitive = $true
+			KeyValueAssigmentChar = $KeyValueAssigmentChar
+			AllowKeysWithoutSection = $true
+			AllowDuplicateKeys = $true
+			OverrideDuplicateKeys = $OverrideDuplicateKeys
+			AllowDuplicateSections = $true
+			SkipInvalidLines = $true
 
-            SectionRegex = '^(\s*?)\[{1}\s*[_\{\}\#\+\;\%\(\)\=\?\&\$\,\:\/\.\-\w\d\s\\\~]+\s*](\s*?)'
-            CommentChar = ';'
-            CommentString = ';'
-            AssigmentSpacer = $AssigmentSpacer
-            ThrowExceptionsOnError = $true
+			<# Not used
 
-            #>
-        }
+				SectionRegex = '^(\s*?)\[{1}\s*[_\{\}\#\+\;\%\(\)\=\?\&\$\,\:\/\.\-\w\d\s\\\~]+\s*](\s*?)'
+				CommentChar = ';'
+				CommentString = ';'
+				AssigmentSpacer = $AssigmentSpacer
+				ThrowExceptionsOnError = $true
 
-        Write-Verbose 'Setting new IniParser configuration'
-        Set-IniParserConfiguration -InputObject $IniParser.Parser.Configuration -Configuration $IniParserCfg
+			#>
+		}
 
-        #endregion
+		Write-Verbose 'Setting new IniParser configuration'
+		Set-IniParserConfiguration -InputObject $IniParser.Parser.Configuration -Configuration $IniParserCfg
 
-        #region Process ini
+		#endregion
 
-        if($Path)
-        {
-            $InputObject = $Path
-        }
+		#region Process Ini
 
-        # Process multiple files via pipeline or array of strings
-        $InputObject |
-        ForEach-Object {
-            try
-            {
-                if($Path)
-                {
-                    Write-Verbose 'Parsing INI from file'
-                    $IniObject = $IniParser.ReadFile($_, (New-Encoding -Encoding $Encoding))
-                }
-                else
-                {
-                    Write-Verbose 'Parsing INI from string'
-                    $IniObject = $IniParser.ParseString($_)
-                }
-            }
-            catch
-            {
-                Write-Error $_
-                return
-            }
+		if($Path)
+		{
+			$InputObject = $Path
+		}
 
-            if($AsObject)
-            {
-                Write-Verbose 'Writing output as object to the pipeline'
-                $IniObject
-            }
-            else
-            {
-                # 'Ordered' hashtable, PS 2.0 compatible
-                $IniHashtable = New-Object -TypeName System.Collections.Specialized.OrderedDictionary
+		# Process multiple files via pipeline or array of strings
+		$InputObject |
+			ForEach-Object {
+			try
+			{
+				if($Path)
+				{
+					Write-Verbose 'Parsing INI from file'
+					$IniObject = $IniParser.ReadFile($_, (New-Encoding -Encoding $Encoding))
+				}
+				else
+				{
+					Write-Verbose 'Parsing INI from string'
+					$IniObject = $IniParser.ParseString($_)
+				}
+			}
+			catch
+			{
+				Write-Error $_
+				return
+			}
 
-                if($IniObject.Global.Count)
-                {
-                    Write-Verbose 'Processing keys without section ("Global" section)'
-                    $IniObject.Global.GetEnumerator() |
-                    ForEach-Object {
-                        Write-Debug "Adding key: $($_.KeyName), value: $($_.Value)"
-                        $IniHashtable.Add($_.KeyName, $_.Value)
-                    }
-                }
+			if($AsObject)
+			{
+				Write-Verbose 'Writing output as object to the pipeline'
+				$IniObject
+			}
+			else
+			{
+				# 'Ordered' hashtable, PS 2.0 compatible
+				$IniHashtable = New-Object -TypeName System.Collections.Specialized.OrderedDictionary
 
-                if($IniObject.Sections.Count)
-                {
-                    Write-Verbose 'Processing keys within sections'
-                    $IniObject.Sections.GetEnumerator() |
-                    ForEach-Object {
+				if($IniObject.Global.Count)
+				{
+					Write-Verbose 'Processing keys without section ("Global" section)'
+					$IniObject.Global.GetEnumerator() |
+						ForEach-Object {
+						Write-Debug "Adding key: $($_.KeyName), value: $($_.Value)"
+						$IniHashtable.Add($_.KeyName, $_.Value)
+					}
+				}
 
-                        # 'Ordered' hashtable, PS 2.0 compatible
-                        $IniSectionHashtable = New-Object -TypeName System.Collections.Specialized.OrderedDictionary
-                        $_.Keys.GetEnumerator() |
-                        ForEach-Object {
-                            $IniSectionHashtable.Add($_.KeyName, $_.Value)
-                        }
+				if($IniObject.Sections.Count)
+				{
+					Write-Verbose 'Processing keys within sections'
+					$IniObject.Sections.GetEnumerator() |
+						ForEach-Object {
 
-                        Write-Debug "Section $($_.SectionName), adding key(s): $(($IniSectionHashtable | Format-Table -AutoSize | Out-String).TrimEnd())"
-                        $IniHashtable.Add($_.SectionName, $IniSectionHashtable)
-                    }
-                }
+						# 'Ordered' hashtable, PS 2.0 compatible
+						$IniSectionHashtable = New-Object -TypeName System.Collections.Specialized.OrderedDictionary
+						$_.Keys.GetEnumerator() |
+							ForEach-Object {
+								$IniSectionHashtable.Add($_.KeyName, $_.Value)
+							}
 
-                Write-Verbose 'Writing output as ordered hashtable to the pipeline'
-                $IniHashtable
-            }
-        }
-        #endregion
-    }
+						Write-Debug "Section $($_.SectionName), adding key(s): $(($IniSectionHashtable | Format-Table -AutoSize | Out-String).TrimEnd())"
+						$IniHashtable.Add($_.SectionName, $IniSectionHashtable)
+					}
+				}
+
+				Write-Verbose 'Writing output as ordered hashtable to the pipeline'
+				$IniHashtable
+			}
+		}
+		#endregion
+	}
 }
 
 
@@ -228,199 +240,207 @@ function Parse-Ini
 #>
 function Serialize-Ini # Export-Ini and ConvertTo-Ini
 {
-    [CmdletBinding(DefaultParameterSetName = 'Object')]
-    Param
-    (
-        [Parameter(Mandatory = $true, ValueFromPipeline = $true, ValueFromPipelineByPropertyName = $true, ParameterSetName = 'Object', Position = 0)]
-        [Parameter(Mandatory = $true, ValueFromPipeline = $true, ValueFromPipelineByPropertyName = $true, ParameterSetName = 'File', Position = 0)]
-        [Parameter(Mandatory = $true, ValueFromPipeline = $true, ValueFromPipelineByPropertyName = $true, ParameterSetName = 'Merge', Position = 0)]
-        [ValidateNotNullOrEmpty()]
-        [System.Object[]]$InputObject,
+	[CmdletBinding(DefaultParameterSetName = 'Object')]
+	Param
+	(
+		[Parameter(Mandatory = $true, ValueFromPipeline = $true, ValueFromPipelineByPropertyName = $true, ParameterSetName = 'Object', Position = 0)]
+		[Parameter(Mandatory = $true, ValueFromPipeline = $true, ValueFromPipelineByPropertyName = $true, ParameterSetName = 'File', Position = 0)]
+		[Parameter(Mandatory = $true, ValueFromPipeline = $true, ValueFromPipelineByPropertyName = $true, ParameterSetName = 'Merge', Position = 0)]
+		[ValidateNotNullOrEmpty()]
+		[System.Object[]]$InputObject,
 
-        [Parameter(Mandatory = $true, ValueFromPipelineByPropertyName = $true, ParameterSetName = 'File', Position = 1)]
-        [ValidateNotNullOrEmpty()]
-        [string]$Path,
+		[Parameter(Mandatory = $true, ValueFromPipelineByPropertyName = $true, ParameterSetName = 'File', Position = 1)]
+		[ValidateNotNullOrEmpty()]
+		[string]$Path,
 
-        [Parameter(ValueFromPipelineByPropertyName = $true, ParameterSetName = 'Object', Position = 1)]
-        [Parameter(ValueFromPipelineByPropertyName = $true, ParameterSetName = 'File', Position = 2)]
-        [Parameter(ValueFromPipelineByPropertyName = $true, ParameterSetName = 'Merge', Position = 1)]
-        [ValidateNotNullOrEmpty()]
-        [string]$CommentString = ';',
+		[Parameter(ValueFromPipelineByPropertyName = $true, ParameterSetName = 'Object', Position = 1)]
+		[Parameter(ValueFromPipelineByPropertyName = $true, ParameterSetName = 'File', Position = 2)]
+		[Parameter(ValueFromPipelineByPropertyName = $true, ParameterSetName = 'Merge', Position = 1)]
+		[ValidateNotNullOrEmpty()]
+		[string]$CommentString = ';',
 
-        [Parameter(ValueFromPipelineByPropertyName = $true, ParameterSetName = 'Object', Position = 2)]
-        [Parameter(ValueFromPipelineByPropertyName = $true, ParameterSetName = 'File', Position = 3)]
-        [Parameter(ValueFromPipelineByPropertyName = $true, ParameterSetName = 'Merge', Position = 2)]
-        [ValidateLength(1, 1)]
-        [ValidateNotNullOrEmpty()]
-        [string]$SectionStartChar = '[',
+		[Parameter(ValueFromPipelineByPropertyName = $true, ParameterSetName = 'Object', Position = 2)]
+		[Parameter(ValueFromPipelineByPropertyName = $true, ParameterSetName = 'File', Position = 3)]
+		[Parameter(ValueFromPipelineByPropertyName = $true, ParameterSetName = 'Merge', Position = 2)]
+		[ValidateLength(1, 1)]
+		[ValidateNotNullOrEmpty()]
+		[string]$SectionStartChar = '[',
 
-        [Parameter(ValueFromPipelineByPropertyName = $true, ParameterSetName = 'Object', Position = 3)]
-        [Parameter(ValueFromPipelineByPropertyName = $true, ParameterSetName = 'File', Position = 4)]
-        [Parameter(ValueFromPipelineByPropertyName = $true, ParameterSetName = 'Merge', Position = 3)]
-        [ValidateLength(1, 1)]
-        [ValidateNotNullOrEmpty()]
-        [string]$SectionEndChar = ']',
+		[Parameter(ValueFromPipelineByPropertyName = $true, ParameterSetName = 'Object', Position = 3)]
+		[Parameter(ValueFromPipelineByPropertyName = $true, ParameterSetName = 'File', Position = 4)]
+		[Parameter(ValueFromPipelineByPropertyName = $true, ParameterSetName = 'Merge', Position = 3)]
+		[ValidateLength(1, 1)]
+		[ValidateNotNullOrEmpty()]
+		[string]$SectionEndChar = ']',
 
-        [Parameter(ValueFromPipelineByPropertyName = $true, ParameterSetName = 'Object', Position = 4)]
-        [Parameter(ValueFromPipelineByPropertyName = $true, ParameterSetName = 'File', Position = 5)]
-        [Parameter(ValueFromPipelineByPropertyName = $true, ParameterSetName = 'Merge', Position = 4)]
-        [ValidateLength(1, 1)]
-        [ValidateNotNullOrEmpty()]
-        [string]$KeyValueAssigmentChar = '=',
+		[Parameter(ValueFromPipelineByPropertyName = $true, ParameterSetName = 'Object', Position = 4)]
+		[Parameter(ValueFromPipelineByPropertyName = $true, ParameterSetName = 'File', Position = 5)]
+		[Parameter(ValueFromPipelineByPropertyName = $true, ParameterSetName = 'Merge', Position = 4)]
+		[ValidateLength(1, 1)]
+		[ValidateNotNullOrEmpty()]
+		[string]$KeyValueAssigmentChar = '=',
 
-        [Parameter(ValueFromPipelineByPropertyName = $true, ParameterSetName = 'Object', Position = 5)]
-        [Parameter(ValueFromPipelineByPropertyName = $true, ParameterSetName = 'Merge', Position = 5)]
-        [switch]$Merge,
+		[Parameter(ValueFromPipelineByPropertyName = $true, ParameterSetName = 'Object', Position = 5)]
+		[Parameter(ValueFromPipelineByPropertyName = $true, ParameterSetName = 'Merge', Position = 5)]
+		[switch]$Merge,
 
-        [Parameter(ValueFromPipelineByPropertyName = $true, ParameterSetName = 'File', Position = 6)]
-        [Parameter(ValueFromPipelineByPropertyName = $true, ParameterSetName = 'Merge', Position = 6)]
-        [switch]$OverrideDuplicateKeys,
+		[Parameter(ValueFromPipelineByPropertyName = $true, ParameterSetName = 'File', Position = 6)]
+		[Parameter(ValueFromPipelineByPropertyName = $true, ParameterSetName = 'Merge', Position = 6)]
+		[switch]$OverrideDuplicateKeys,
 
-        [Parameter(ValueFromPipelineByPropertyName = $true, ParameterSetName = 'File', Position = 7)]
-        [string]$Encoding,
+		[Parameter(ValueFromPipelineByPropertyName = $true, ParameterSetName = 'File', Position = 7)]
+		[string]$Encoding,
 
-        [Parameter(ValueFromPipelineByPropertyName = $true, ParameterSetName = 'File', Position = 8)]
-        [switch]$NoClobber
+		[Parameter(ValueFromPipelineByPropertyName = $true, ParameterSetName = 'File', Position = 8)]
+		[switch]$NoClobber
 
-        <# Reserved for future use
+		<# Reserved for future use
 
-        [Parameter(ValueFromPipelineByPropertyName = $true, ParameterSetName = 'Object')]
-        [Parameter(ValueFromPipelineByPropertyName = $true, ParameterSetName = 'File')]
-        [Parameter(ValueFromPipelineByPropertyName = $true, ParameterSetName = 'Merge')]
-        [ValidateNotNullOrEmpty()]
-        [string]$AssigmentSpacer = '',
+			[Parameter(ValueFromPipelineByPropertyName = $true, ParameterSetName = 'Object')]
+			[Parameter(ValueFromPipelineByPropertyName = $true, ParameterSetName = 'File')]
+			[Parameter(ValueFromPipelineByPropertyName = $true, ParameterSetName = 'Merge')]
+			[ValidateNotNullOrEmpty()]
+			[string]$AssigmentSpacer = '',
 
-        #>
-    )
+		#>
+	)
 
-    Begin
-    {
-        Write-Verbose 'Creating new IniParser objects...'
-        try
-        {
-            $IniParser = New-Object -TypeName IniParser.FileIniDataParser
-            $IniData = New-Object -TypeName IniParser.Model.IniDataCaseInsensitive
-        }
-        catch
-        {
-            throw $_
-        }
+	Begin
+	{
+		Write-Verbose 'Creating new IniParser objects...'
+		try
+		{
+			$IniParser = New-Object -TypeName IniParser.FileIniDataParser
+			$IniData = New-Object -TypeName IniParser.Model.IniDataCaseInsensitive
+		}
+		catch
+		{
+			throw $_
+		}
 
-    }
+	}
 
-    Process
-    {
-        if($Path)
-        {
-            if($NoClobber -and (Test-Path -LiteralPath $Path -PathType Leaf))
-            {
-                Write-Error "File already exist: $Path"
-                return
-            }
+	Process
+	{
+		if($Path)
+		{
+			if($NoClobber -and (Test-Path -LiteralPath $Path -PathType Leaf))
+			{
+				Write-Error "File already exist: $Path"
+				return
+			}
 
-            Write-Verbose 'Forcing Merge for the file output'
-            $Merge = $true
-        }
+			Write-Verbose 'Forcing Merge for the file output'
+			$Merge = $true
+		}
 
-        Write-Verbose 'Mapping parameters to IniParser configuration'
-        $IniParserCfg = @{
-            SectionStartChar = $SectionStartChar
-            SectionEndChar = $SectionEndChar
-            CaseInsensitive = $true
-            CommentString = $CommentString
-            KeyValueAssigmentChar = $KeyValueAssigmentChar
-            AssigmentSpacer = ''
+		#region Configure IniParser
 
-            <# Not used
+		Write-Verbose 'Mapping parameters to IniParser configuration'
+		$IniParserCfg = @{
+			SectionStartChar = $SectionStartChar
+			SectionEndChar = $SectionEndChar
+			CaseInsensitive = $true
+			CommentString = $CommentString
+			KeyValueAssigmentChar = $KeyValueAssigmentChar
+			AssigmentSpacer = ''
 
-            CommentRegex = 
-            SectionRegex = '^(\s*?)\[{1}\s*[_\{\}\#\+\;\%\(\)\=\?\&\$\,\:\/\.\-\w\d\s\\\~]+\s*](\s*?)'
-            CommentChar = ';'
-            AllowKeysWithoutSection = $true
-            AllowDuplicateKeys = $true
-            OverrideDuplicateKeys = $OverrideDuplicateKeys
-            ThrowExceptionsOnError = $true
-            AllowDuplicateSections = $true
-            SkipInvalidLines = $true
+			<# Not used
 
-            #>
-        }
+				CommentRegex = 
+				SectionRegex = '^(\s*?)\[{1}\s*[_\{\}\#\+\;\%\(\)\=\?\&\$\,\:\/\.\-\w\d\s\\\~]+\s*](\s*?)'
+				CommentChar = ';'
+				AllowKeysWithoutSection = $true
+				AllowDuplicateKeys = $true
+				OverrideDuplicateKeys = $OverrideDuplicateKeys
+				ThrowExceptionsOnError = $true
+				AllowDuplicateSections = $true
+				SkipInvalidLines = $true
 
-        Write-Verbose 'Setting new IniParser configuration'
-        Set-IniParserConfiguration -InputObject $IniData.Configuration -Configuration $IniParserCfg
+			#>
+		}
 
-        $InputObject |
-        ForEach-Object {
+		Write-Verbose 'Setting new IniParser configuration'
+		Set-IniParserConfiguration -InputObject $IniData.Configuration -Configuration $IniParserCfg
 
-            if(Is-Hashtable -InputObject $_)
-            {
-                Write-Verbose 'Input is hashtable, converting to IniData'
-                $currIniData = ConvertHashtable-ToIni -Hashtable $_
-            }
-            elseif(Is-IniData -InputObject $_)
-            {
-                Write-Verbose 'Input is IniData, skipping conversion'
-                $currIniData = $_
-            }
-            else
-            {
-                Write-Error 'Input is not hashtable or IniData'
-                return
-            }
+		#endregion
 
-            if($OverrideDuplicateKeys)
-            {
-                Write-Verbose 'Processing data from the current object, overriding duplicate keys if any'
-                $IniData.Merge($currIniData)
-            }
-            else
-            {
-                Write-Verbose 'Processing data from the current object'
+		#region Process object
 
-                # This doesn't work: $IniData.Merge($currIniData.Clone().Merge($IniData.Clone()))
+		$InputObject |
+			ForEach-Object {
 
-                $cloneCID = $currIniData.Clone()
-                $cloneID = $IniData.Clone()
-                $cloneCID.Merge($cloneID)
+			if(Is-Hashtable -InputObject $_)
+			{
+				Write-Verbose 'Input is hashtable, converting to IniData'
+				$currIniData = ConvertHashtable-ToIni -Hashtable $_
+			}
+			elseif(Is-IniData -InputObject $_)
+			{
+				Write-Verbose 'Input is IniData, skipping conversion'
+				$currIniData = $_
+			}
+			else
+			{
+				Write-Error 'Input is not hashtable or IniData'
+				return
+			}
 
-                $IniData.Merge($cloneCID)
-            }
+			if($OverrideDuplicateKeys)
+			{
+				Write-Verbose 'Processing data from the current object, overriding duplicate keys if any'
+				$IniData.Merge($currIniData)
+			}
+			else
+			{
+				Write-Verbose 'Processing data from the current object'
 
-            if(!$Merge) # means we're also not writing a file
-            {
-                Write-Verbose 'Writing output as string to the pipeline'
-                $IniData.ToString()
+				# This doesn't work: $IniData.Merge($currIniData.Clone().Merge($IniData.Clone()))
 
-                Write-Verbose 'Resetting IniParser object for the next loop'
-                try
-                {
-                    $IniData.Global.RemoveAllKeys()
-                    $IniData.Sections.Clear()
-                }
-                catch
-                {
-                    throw $_
-                }
-            }
-        }
-    }
+				$cloneCID = $currIniData.Clone()
+				$cloneID = $IniData.Clone()
+				$cloneCID.Merge($cloneID)
 
-    End
-    {
-        if($Merge)
-        {
-            if($Path)
-            {
-                Write-Verbose "Writing merged output as file: $Path"
-                $IniParser.WriteFile($Path, $IniData, (New-Encoding -Encoding $Encoding))
-            }
-            else
-            {
-                Write-Verbose 'Writing merged output as string to the pipeline'
-                $IniData.ToString()
-            }
-        }
-    }
+				$IniData.Merge($cloneCID)
+			}
+
+			if(!$Merge) # means we're also not writing a file
+			{
+				Write-Verbose 'Writing output as string to the pipeline'
+				$IniData.ToString()
+
+				Write-Verbose 'Resetting IniParser object for the next loop'
+				try
+				{
+					$IniData.Global.RemoveAllKeys()
+					$IniData.Sections.Clear()
+				}
+				catch
+				{
+					throw $_
+				}
+			}
+		}
+
+		#endregion
+	}
+
+	End
+	{
+		if($Merge)
+		{
+			if($Path)
+			{
+				Write-Verbose "Writing merged output as file: $Path"
+				$IniParser.WriteFile($Path, $IniData, (New-Encoding -Encoding $Encoding))
+			}
+			else
+			{
+				Write-Verbose 'Writing merged output as string to the pipeline'
+				$IniData.ToString()
+			}
+		}
+	}
 }
 #endregion
 
@@ -451,94 +471,95 @@ function Serialize-Ini # Export-Ini and ConvertTo-Ini
 #>
 function ConvertHashtable-ToIni
 {
-    [CmdletBinding()]
-    Param
-    (
-        [Parameter(Mandatory=$true, ValueFromPipeline = $true, ValueFromPipelineByPropertyName = $true)]
-        [ValidateNotNullOrEmpty()]
-        $Hashtable,
+	[CmdletBinding()]
+	Param
+	(
+		[Parameter(Mandatory=$true, ValueFromPipeline = $true, ValueFromPipelineByPropertyName = $true)]
+		[ValidateNotNullOrEmpty()]
+		$Hashtable,
 
-        [Parameter(ValueFromPipelineByPropertyName = $true)]
-        [ValidateNotNullOrEmpty()]
-        $IniData = (New-Object -TypeName IniParser.Model.IniDataCaseInsensitive),
+		[Parameter(ValueFromPipelineByPropertyName = $true)]
+		[ValidateNotNullOrEmpty()]
+		$IniData = (New-Object -TypeName IniParser.Model.IniDataCaseInsensitive),
 
-        [Parameter(ValueFromPipelineByPropertyName = $true)]
-        [ValidateNotNullOrEmpty()]
-        [int]$Depth = 2,
+		[Parameter(ValueFromPipelineByPropertyName = $true)]
+		[ValidateNotNullOrEmpty()]
+		[int]$Depth = 2,
 
-        # Parameters below are to support recursion
-        [ValidateNotNullOrEmpty()]
-        [int]$CurrentDepth = 1,
+		# Parameters below are to support recursion
+		[ValidateNotNullOrEmpty()]
+		[int]$CurrentDepth = 1,
 
-        [ValidateNotNullOrEmpty()]
-        [string]$Section = 'Global'
-    )
+		[ValidateNotNullOrEmpty()]
+		[string]$Section = 'Global'
+	)
 
-    Begin
-    {
-        # Scriptblocks for common messages
-        $AddKey = {"Adding key: '$($_.Key)' to section: '$Section', with value: '$($_.Value)'"}
-        $AddKeyFailed = {"Failed to add key: '$($_.Key)', to section: '$Section'"}
-    }
+	Begin
+	{
+		# Scriptblocks for common messages
+		$AddKey = {"Adding key: '$($_.Key)' to section: '$Section', with value: '$($_.Value)'"}
+		$AddKeyFailed = {"Failed to add key: '$($_.Key)', to section: '$Section'"}
+	}
 
-    Process
-    {
-        Write-Debug "Current depth: $CurrentDepth"
+	Process
+	{
+		Write-Debug "Current depth: $CurrentDepth"
 
-        if($CurrentDepth -gt $Depth)
-        {
-            Write-Debug "Exiting, reached maximum: $Depth"
-            return
-        }
-        $Hashtable.GetEnumerator() |
-        ForEach-Object {
-            if($_.Value | Is-Hashtable)
-            {
-                Write-Debug "Key contains hashtable: $($_.Key)"
-                Write-Debug "Recursively calling $($PSCmdlet.MyInvocation.MyCommand.Name)"
-                $PSBoundParameters.IniData = $IniData
-                $PSBoundParameters.CurrentDepth = $CurrentDepth + 1
-                $PSBoundParameters.Section = $_.Key
-                $PSBoundParameters.Hashtable = $_.Value
-                & $PSCmdlet.MyInvocation.MyCommand.Name @PSBoundParameters
-            }
-            else
-            {
-                if($Section -eq 'Global')
-                {
-                    Write-Debug $(. $AddKey)
-                    if(!$IniData.Global.AddKey($_.Key, $_.Value))
-                    {
-                        throw $(. $AddKeyFailed)
-                    }
-                }
-                else
-                {
-                    if(!$IniData.Sections.ContainsSection($Section))
-                    {
-                        Write-Debug "Adding ini section: $Section"
-                        if(!$IniData.Sections.AddSection($Section))
-                        {
-                            throw "Failed to add section: $Section"
-                        }
-                    }
+		if($CurrentDepth -gt $Depth)
+		{
+			Write-Debug "Exiting, reached maximum: $Depth"
+			return
+		}
 
-                    Write-Debug $(. $AddKey)
-                    if(!$IniData.Sections[$Section].AddKey($_.Key, $_.Value))
-                    {
-                        throw $(. $AddKeyFailed)
-                    }
-                }                    
-            }
-        }
+		$Hashtable.GetEnumerator() |
+			ForEach-Object {
+			if($_.Value | Is-Hashtable)
+			{
+				Write-Debug "Key contains hashtable: $($_.Key)"
+				Write-Debug "Recursively calling $($PSCmdlet.MyInvocation.MyCommand.Name)"
+				$PSBoundParameters.IniData = $IniData
+				$PSBoundParameters.CurrentDepth = $CurrentDepth + 1
+				$PSBoundParameters.Section = $_.Key
+				$PSBoundParameters.Hashtable = $_.Value
+				& $PSCmdlet.MyInvocation.MyCommand.Name @PSBoundParameters
+			}
+			else
+			{
+				if($Section -eq 'Global')
+				{
+					Write-Debug $(. $AddKey)
+					if(!$IniData.Global.AddKey($_.Key, $_.Value))
+					{
+						throw $(. $AddKeyFailed)
+					}
+				}
+				else
+				{
+					if(!$IniData.Sections.ContainsSection($Section))
+					{
+						Write-Debug "Adding ini section: $Section"
+						if(!$IniData.Sections.AddSection($Section))
+						{
+							throw "Failed to add section: $Section"
+						}
+					}
 
-        # Do not return if runnnig recursively
-        if($CurrentDepth -eq 1)
-        {
-            Write-Debug 'Returning result'
-            $IniData
-        }
-    }
+					Write-Debug $(. $AddKey)
+					if(!$IniData.Sections[$Section].AddKey($_.Key, $_.Value))
+					{
+						throw $(. $AddKeyFailed)
+					}
+				}                    
+			}
+		}
+
+		# Do not return if runnnig recursively
+		if($CurrentDepth -eq 1)
+		{
+			Write-Debug 'Returning result'
+			$IniData
+		}
+	}
 }
 
 <#
@@ -628,7 +649,7 @@ function Set-IniParserConfiguration
     Process
     {
         $Configuration.GetEnumerator() |
-        ForEach-Object {
+			ForEach-Object {
             Write-Debug "$($_.Key) = $($_.Value)"
             $InputObject."$($_.Key)" = $_.Value
         }
@@ -787,7 +808,7 @@ function New-CommentBasedHelp
             if($HelpTopic -is [hashtable])
             {
                 $HelpTopic.GetEnumerator() |
-                ForEach-Object {
+					ForEach-Object {
                     if
                     (
                         $topic -eq 'Parameter' -and
@@ -807,9 +828,9 @@ function New-CommentBasedHelp
             {
                 Write-Debug "Processing topic: $topic"
                 $HelpTopic |
-                ForEach-Object {
-                    $CommandHelp += '.{0}{2}{1}' -f $topic, $_, $NewLine
-                }
+					ForEach-Object {
+						$CommandHelp += '.{0}{2}{1}' -f $topic, $_, $NewLine
+					}
             }
         }
 
@@ -885,7 +906,7 @@ function New-ProxyCommandFromParameterSet
             Write-Debug "Processing parameter: $_"
             $Parameter = $_
             $ExcludeParameterSet |
-            ForEach-Object {
+				ForEach-Object {
                 if($ProxyCommandMetaData.Parameters[$Parameter].ParameterSets.ContainsKey($_))
                 {
                     Write-Debug "Parameter contains excluded ParameterSet: $_"
@@ -959,7 +980,7 @@ You can use the parameters of the Import-Ini cmdlet to specify various parsing o
 You can also use the ConvertTo-Ini and ConvertFrom-Ini cmdlets to convert hashtables to INI strings (and back). These cmdlets are the same as the Export-Ini and Import-Ini cmdlets, except that they do not deal with files.
 '@
         Example = @'
-Import-Ini -Path C:\Windows\System.ini
+Import-Ini -Path 'C:\Windows\System.ini'
  
     Description
     -----------
@@ -973,7 +994,7 @@ Import-Ini -Path 'C:\Windows\System.ini', 'C:\Windows\Win.ini'
     Import multiple files, return hashtables.
 '@,
 @'
-C:\Windows\System.ini | Import-Ini
+'C:\Windows\System.ini' | Import-Ini
  
     Description
     -----------
@@ -987,7 +1008,21 @@ C:\Windows\System.ini | Import-Ini
     Import multiple files specified via pipeline input, return hashtables.
 '@,
 @'
-Import-Ini -Path C:\Windows\System.ini -CommentStrings '%' -SectionStartChar '{' -SectionEndChar '}' -KeyValueAssigmentChar '@'
+Get-ChildItem -Path 'C:\Windows\*.ini' | Import-Ini
+ 
+    Description
+    -----------
+    Import all INI files in the directory, return hashtables.
+'@,
+@'
+'C:\Windows\*.ini' | Get-ChildItem | Import-Ini
+ 
+    Description
+    -----------
+    Import all INI files in the directory, return hashtables. Pipeline style! ヾ(⌐■_■)ノ♪
+'@,
+@'
+Import-Ini -Path 'C:\Windows\System.ini' -CommentStrings '%' -SectionStartChar '{' -SectionEndChar '}' -KeyValueAssigmentChar '@'
  
     Description
     -----------
@@ -1000,7 +1035,7 @@ Import-Ini -Path C:\Windows\System.ini -CommentStrings '%' -SectionStartChar '{'
     %Comment
 '@,
 @'
-$IniData = Import-Ini -Path C:\Windows\System.ini -AsObject
+$IniData = Import-Ini -Path 'C:\Windows\System.ini' -AsObject
  
     Description
     -----------
