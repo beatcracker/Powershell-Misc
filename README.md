@@ -20,7 +20,7 @@
 
 The best way to use provided functions is a [dot-sourcing](http://ss64.com/ps/source.html).
 
-Dot-sourcing runs a script in the current scope so that any functions, aliases, and variables that the script creates are added to the current scope. 
+Dot-sourcing runs a script file in the current scope so that any functions, aliases, and variables that the script file creates are added to the current scope. 
 
 #####In PowerShell console\PowerShell ISE script pane
 
@@ -30,7 +30,7 @@ Dot-sourcing runs a script in the current scope so that any functions, aliases, 
 . c:\scripts\Get-TerminologyTranslation.ps1
 ```
 
-Or, navigate to the folder, where you downloaded script
+Or, navigate to the folder, where you downloaded script file
 
 ```
 cd c:\scripts
@@ -42,16 +42,16 @@ And then type:
 . .\Get-TerminologyTranslation.ps1
 ```
 
-To verify, that script is loaded, try to view help for the loaded function. The function name is usually the same as script name (without extension), if not stated otherwise in readme.
+To verify, that script file is loaded, try to view help for the loaded function. The function name is usually the same as script file name (without extension), if not stated otherwise in readme.
 
 ```powershell
-Get-Help -Full Get-TerminologyTranslation
+Get-Help -Name Get-TerminologyTranslation -Full
 ```
 
 Congratulations, you can now make use of newly added function!
 
 ```powershell
-Get-TerminologyTranslation -Text 'Control Panel' -From 'en-us' -To 'ru-ru' -Source Terms
+'Windows Update' | Get-TerminologyTranslation -From 'en-us' -To 'ru-ru' -Source Terms
 
 ```
 
@@ -63,7 +63,7 @@ Dot-source from arbitrary location before calling the function:
 
 ```powershell
 . c:\scripts\Get-TerminologyTranslation.ps1
-Get-TerminologyTranslation -Text 'Control Panel' -From 'en-us' -To 'ru-ru' -Source Terms
+'Windows Update' | Get-TerminologyTranslation -From 'en-us' -To 'ru-ru' -Source Terms
 ```
 
 Or put it alongside with your script, get path to the script folder programmatically, and then dot-source:
@@ -71,7 +71,7 @@ Or put it alongside with your script, get path to the script folder programmatic
 ```powershell
 $ScriptDir = Split-Path $script:MyInvocation.MyCommand.Path
 . (Join-Path -Path $ScriptDir -ChildPath 'Get-TerminologyTranslation.ps1')
-Get-TerminologyTranslation -Text 'Control Panel' -From 'en-us' -To 'ru-ru' -Source Terms
+'Windows Update' | Get-TerminologyTranslation -From 'en-us' -To 'ru-ru' -Source Terms
 
 ```
 
