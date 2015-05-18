@@ -10,6 +10,7 @@
   - [Get-TerminologyTranslation](#get-terminologytranslationps1)
   - [Split-CommandLine](#split-commandlineps1)
   - [Import-Component](#import-componentps1)
+  - [New-DynamicParameter](#new-dynamicparameterps1)
   - [Get-SvnAuthor](#get-svnauthorps1)
 - [Scripts](#scripts)
   - [New-GitSvnAuthorsFile](#new-gitsvnauthorsfileps1)
