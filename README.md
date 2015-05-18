@@ -203,6 +203,70 @@ Usage example
 ```powershell
 . Import-Component 'C:\PsLib' -Recurse -Include 'MyScript*','*MyLib*' -Exclude '*_backup*','*_old*'
 ```
+#####`New-DynamicParameter.ps1`
+
+Helper function to simplify creating [dynamic parameters](https://technet.microsoft.com/en-us/library/hh847743.aspx).
+Example use cases:
+ - Include parameters only if your environment dictates it
+ - Include parameters depending on the value of a user-specified parameter
+ - Provide tab completion and intellisense for parameters, depending on the environment
+
+Credits to Justin Rich ([blog](http://jrich523.wordpress.com), [GitHub](https://github.com/jrich523)) and Warren F. ([blog](http://ramblingcookiemonster.github.io), [GitHub](https://github.com/RamblingCookieMonster)) for their initial code and inspiration:
+ - [New-DynamicParam.ps1](https://github.com/RamblingCookieMonster/PowerShell/blob/master/New-DynamicParam.ps1)
+ - [Credentials and Dynamic Parameters](http://ramblingcookiemonster.wordpress.com/2014/11/27/quick-hits-credentials-and-dynamic-parameters/)
+ - [PowerShell: Simple way to add dynamic parameters to advanced function](http://jrich523.wordpress.com/2013/05/30/powershell-simple-way-to-add-dynamic-parameters-to-advanced-function/)
+
+Credit to BM for alias and type parameters and their handling.
+
+Features
+
+  * Create dynamic parameters for your functions on the fly.
+  * Full comment-based help and usage examples.
+
+Usage example
+
+* Create one dynamic parameter. This example illustrates the use of `New-DynamicParameter` to create a single dynamic parameter. The `Drive`'s parameter `ValidateSet` is populated with all available volumes on the computer for handy tab completion / intellisense. 
+
+```powershell
+function Get-FreeSpace
+{
+	[CmdletBinding()]
+	Param()
+	DynamicParam
+	{
+		# Get drive names for ValidateSet attribute
+		$DriveList = ([System.IO.DriveInfo]::GetDrives()).Name
+
+		# Create new dynamic parameter
+		New-DynamicParameter -Name Drive -ValidateSet $DriveList -Type ([array]) -Position 0 -Mandatory
+	}
+
+	Process
+	{
+		# Dynamic parameters don't have corresponding variables created,
+		# you need to call New-DynamicParameter with CreateVariables switch to fix that.
+		New-DynamicParameter -CreateVariables -BoundParameters $PSBoundParameters
+
+		$DriveInfo = [System.IO.DriveInfo]::GetDrives() | Where-Object {$Drive -contains $_.Name}
+		$DriveInfo |
+			ForEach-Object {
+				if(!$_.TotalFreeSpace)
+				{
+					$FreePct = 0
+				}
+				else
+				{
+					$FreePct = [System.Math]::Round(($_.TotalSize / $_.TotalFreeSpace), 2)
+				}
+				New-Object -TypeName psobject -Property @{
+					Drive = $_.Name
+					DriveType = $_.DriveType
+					'Free(%)' = $FreePct
+				}
+			}
+	}
+}
+```
 
 #####`Get-SvnAuthor.ps1`
 
