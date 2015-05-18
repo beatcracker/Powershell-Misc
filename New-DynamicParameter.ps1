@@ -247,7 +247,7 @@
 	Usage: Get-FreeSpace -DriveType <tab> -Precision 2
 
 	Parameters are defined in the array of hashtables, which is then piped through the New-Object to create PSObject and pass it to the New-DynamicParameter function.
-	If parameter with the same name already exists in the RuntimeDefinedParameterDictionary, a new Parameter Set is added to it.
+	If parameter with the same name already exist in the RuntimeDefinedParameterDictionary, a new Parameter Set is added to it.
 	Because of piping, New-DynamicParameter function is able to create all parameters at once, thus eleminating need for you to create and pass external RuntimeDefinedParameterDictionary to it.
 
 	function Get-FreeSpace
@@ -545,8 +545,8 @@ Function New-DynamicParameter {
 		}
 		else
 		{
-			Write-Verbose 'Fixing cached bound parameters, if any'
-			Write-Verbose 'More info: https://beatcracker.wordpress.com/2014/12/18/psboundparameters-pipeline-and-the-valuefrompipelinebypropertyname-parameter-attribute'
+			Write-Verbose 'Looking for cached bound parameters'
+			Write-Debug 'More info: https://beatcracker.wordpress.com/2014/12/18/psboundparameters-pipeline-and-the-valuefrompipelinebypropertyname-parameter-attribute'
 			$StaleKeys = @()
 			$StaleKeys = $PSBoundParameters.GetEnumerator() |
 						ForEach-Object {
@@ -572,6 +572,30 @@ Function New-DynamicParameter {
 				"Found $($StaleKeys.Count) cached bound parameters:",  $StaleKeys | Write-Debug
 				Write-Verbose 'Removing cached bound parameters'
 				$StaleKeys | ForEach-Object {[void]$PSBoundParameters.Remove($_)}
+			}
+
+			# Since we rely solely on $PSBoundParameters, we don't have access to default values for unbound parameters
+			Write-Verbose 'Looking for unbound parameters with default values'
+
+			Write-Debug 'Getting unbound parameters list'
+			$UnboundParameters = (Get-Command -Name ($PSCmdlet.MyInvocation.InvocationName)).Parameters.GetEnumerator()  |
+										# Find parameters that are belong to the current parameter set
+										Where-Object { $_.Value.ParameterSets.Keys -contains $PsCmdlet.ParameterSetName } |
+											Select-Object -ExpandProperty Key |
+												# Find unbound parameters in the current parameter set
+												Where-Object { $PSBoundParameters.Keys -notcontains $_ }
+
+			# Even if parameter is not bound, corresponding variable is created with parameter's default value (if specified)
+			Write-Debug 'Trying to get variables with default parameter value and create a new bound parameter''s'
+			$tmp = $null
+			foreach($Parameter in $UnboundParameters)
+			{
+				$DefaultValue = Get-Variable -Name $Parameter -ValueOnly -Scope 0
+				if(!$PSBoundParameters.TryGetValue($Parameter, [ref]$tmp) -and $DefaultValue)
+				{
+					$PSBoundParameters.$Parameter = $DefaultValue
+					Write-Debug "Added new parameter '$Parameter' with value '$DefaultValue'"
+				}
 			}
 
 			if($Dictionary)
@@ -618,12 +642,12 @@ Function New-DynamicParameter {
 
 			if($DPDictionary.Keys -contains $Name)
 			{
-				Write-Verbose "Dynamic parameter '$Name' already exists, adding another parameter set to it"
+				Write-Verbose "Dynamic parameter '$Name' already exist, adding another parameter set to it"
 				$DPDictionary.$Name.Attributes.Add($ParameterAttribute)
 			}
 			else
 			{
-				Write-Verbose "Dynamic parameter '$Name' doesn't exists, creating"
+				Write-Verbose "Dynamic parameter '$Name' doesn't exist, creating"
 
 				Write-Debug 'Creating new attribute collection object'
 				$AttributeCollection = New-Object -TypeName Collections.ObjectModel.Collection[System.Attribute]
