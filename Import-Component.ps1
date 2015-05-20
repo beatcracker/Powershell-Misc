@@ -117,14 +117,14 @@
 		Note, that to be able to import .ps1 scripts into the current scope, this function is dot-sourced.
 
 .Example
-	Import-Component 'C:\PsLib' -Type Ps
+	Import-Component 'C:\PsLib' -Type Psm
 
 		Description
 		-----------
 		Import Powershell modules only (.psm1).
 
 .Example
-	Import-Component 'C:\PsLib' -Type Ps,Cs,Asm
+	Import-Component 'C:\PsLib' -Type Psm,Cs,Asm
 
 		Description
 		-----------
