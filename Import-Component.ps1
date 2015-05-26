@@ -181,6 +181,10 @@ function Import-Component
 				# https://msdn.microsoft.com/en-us/library/dd878350.aspx
 				Import-Module $_.FullName -ErrorAction SilentlyContinue
 			}
+			else
+			{
+				throw "Folder '$($_.Basename)' is not a well-formed module"
+			}
 		}
 
 		# Define extensions for file types and assign import commands
