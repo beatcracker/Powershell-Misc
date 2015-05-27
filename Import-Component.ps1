@@ -216,32 +216,28 @@ function Import-Component
 			Write-Warning "To import .PS1 scripts this function itself has to be dot-sourced! Example: $($Split[$Split.IndexOf($MyCommandName)] = ". $MyCommandName" ; $Split -join '')"
 		}
 
-		# Filter function to process Include\Exclude parameters
-		filter Skip-File {
-			if
-			(
-				# No file extension and directory = module, else - file
-				((!$currFT.Extension -and $_.PSIsContainer) -or ($currFT.Extension -and !$_.PSIsContainer)) -and
-				$($tmp = $_.BaseName ; $Exclude | ForEach-Object {if($tmp -notlike $_){$true}}) -and
-				$($tmp = $_.BaseName ; $Include | ForEach-Object {if($tmp -like $_){$true}})
-			)
-			{
-				$_
-			}
-		}
-
 		$FileTypeToImport |
 			ForEach-Object {
 				# We need to pass current file type to the filter function later
-				Set-Variable -Name currFT -Value $_ -Option AllScope
+                $Private:currFT = $_
 				Write-Verbose "Searching path '$Path' for file type '$(('*' + $_.Extension))'"
 				Get-ChildItem -LiteralPath $Path -Filter ('*' + $_.Extension) -Recurse:$Recurse |
-					Skip-File |
+		            # Process Include\Exclude parameters
+					ForEach-Object {
+			            if
+			            (
+				            # No file extension and directory = module, else - file
+				            ((!$Private:currFT.Extension -and $_.PSIsContainer) -or ($Private:currFT.Extension -and !$_.PSIsContainer)) -and
+				            $($tmp = $_.BaseName ; $Exclude | ForEach-Object {if($tmp -notlike $_){$true}}) -and
+				            $($tmp = $_.BaseName ; $Include | ForEach-Object {if($tmp -like $_){$true}})
+			            )
+			            {$_}
+                    } |
 						ForEach-Object {
 							Try
 							{
 								Write-Verbose "Trying to import: $_"
-								. $currFT.Command
+								. $Private:currFT.Command
 								$Success = $true
 								$ErrMsg = $null
 								Write-Verbose 'Success'
