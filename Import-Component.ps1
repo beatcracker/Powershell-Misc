@@ -171,7 +171,7 @@ function Import-Component
 		$IsDotSourced = $Split[0] -match '\.\s*$'
 		Write-Verbose "Function dot-sourced: $IsDotSourced"
 
-		# Define scriptblocks that will import verious file types
+		# Define scriptblocks that will import various file types
 		$DotSource = {. $_.FullName}
 		$AddType = {Add-Type -LiteralPath $_.FullName -ErrorAction SilentlyContinue}
 		$ImportModule = {
@@ -179,7 +179,7 @@ function Import-Component
 			{
 				Write-Verbose "Folder '$($_.Basename)' looks like well-formed module"
 				# https://msdn.microsoft.com/en-us/library/dd878350.aspx
-				Import-Module $_.FullName -ErrorAction SilentlyContinue
+				Import-Module -Name $_.FullName -ErrorAction SilentlyContinue
 			}
 			else
 			{
@@ -219,20 +219,22 @@ function Import-Component
 		$FileTypeToImport |
 			ForEach-Object {
 				# We need to pass current file type to the filter function later
-                $Private:currFT = $_
+				$Private:currFT = $_
 				Write-Verbose "Searching path '$Path' for file type '$(('*' + $_.Extension))'"
 				Get-ChildItem -LiteralPath $Path -Filter ('*' + $_.Extension) -Recurse:$Recurse |
-		            # Process Include\Exclude parameters
+					# Process Include\Exclude parameters
 					ForEach-Object {
-			            if
-			            (
-				            # No file extension and directory = module, else - file
-				            ((!$Private:currFT.Extension -and $_.PSIsContainer) -or ($Private:currFT.Extension -and !$_.PSIsContainer)) -and
-				            $($tmp = $_.BaseName ; $Exclude | ForEach-Object {if($tmp -notlike $_){$true}}) -and
-				            $($tmp = $_.BaseName ; $Include | ForEach-Object {if($tmp -like $_){$true}})
-			            )
-			            {$_}
-                    } |
+						if
+						(
+							# No file extension and directory = module, else - file
+							((!$Private:currFT.Extension -and $_.PSIsContainer) -or ($Private:currFT.Extension -and !$_.PSIsContainer)) -and
+							# Include\Exclude filters with wildcard support
+							$($_ |
+								Where-Object {$tmp = $_.Basename ; ($Include | Where-Object {$tmp -like $_})} |
+									Where-Object {$tmp = $_.Basename ; !($Exclude | Where-Object {$tmp -like $_})})
+						)
+						{$_}
+					} |
 						ForEach-Object {
 							Try
 							{
@@ -244,7 +246,7 @@ function Import-Component
 							}
 							Catch
 							{
-								Write-Verbose 'Failed'
+								Write-Verbose 'Failure'
 								$Success = $false
 								$ErrMsg = $_
 							}
@@ -257,7 +259,7 @@ function Import-Component
 							}
 
 							Write-Verbose "Writing import status for '$_' to pipeline"
-							New-Object PSObject -Property $ret | Select-Object Name, Path, Loaded, Error
+							New-Object -TypeName PSObject -Property $ret | Select-Object -Property Name, Path, Loaded, Error
 						}
 			}
 	}
