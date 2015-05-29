@@ -185,7 +185,8 @@ Features
 
   * Supported components:
     * Script (.ps1) - imported using [Dot-Sourcing](http://ss64.com/ps/source.html).
-    * Module (.psm1) - imported using [Import-Module](http://technet.microsoft.com/en-us/library/hh849725.aspx) cmdlet
+    * Module - imported using [Import-Module](http://technet.microsoft.com/en-us/library/hh849725.aspx) cmdlet  
+        _This function will only try to import well-formed modules. A "well-formed" module is a module that is stored in a directory that has the same name as the base name of at least one file in the module directory. If a module is not well-formed, Windows PowerShell does not recognize it as a module. [More info](https://msdn.microsoft.com/en-us/library/dd878350.aspx)_
     * Source code (.cs, .vb, .js) - imported using [Add-Type](http://technet.microsoft.com/en-us/library/hh849914.aspx) cmdlet
     * .Net assembly (.dll) - imported using [Add-Type](http://technet.microsoft.com/en-us/library/hh849914.aspx) cmdlet
   * Full comment-based help and usage examples.
@@ -199,7 +200,7 @@ __WARNING: To import .PS1 scripts this function itself has to be dot-sourced!__ 
 
 Usage example
 
-* Import all supported components (`.ps1`, `.psm1`, `.cs`, `.vb`, `.js`, `.dll`), recurse into subdirectories. Include only files with names without extension that match wildcards `MyScript*` and `*MyLib*`. Exclude files with names without extension that match `*_backup*` and `*_old*` wildcards.
+* Import all supported components (`.ps1`, `module`, `.cs`, `.vb`, `.js`, `.dll`), recurse into subdirectories. Include only files with names without extension that match wildcards `MyScript*` and `*MyLib*`. Exclude files with names without extension that match `*_backup*` and `*_old*` wildcards.
 
 ```powershell
 . Import-Component 'C:\PsLib' -Recurse -Include 'MyScript*','*MyLib*' -Exclude '*_backup*','*_old*'
