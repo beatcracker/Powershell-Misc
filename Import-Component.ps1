@@ -144,123 +144,276 @@
 function Import-Component
 {
 	[CmdletBinding()]
-	Param(
-		[Parameter(Mandatory = $true, ValueFromPipeline = $true, ValueFromPipelineByPropertyName = $true, Position = 0)]
-		[ValidateScript({Test-Path -LiteralPath $_ -PathType Container})]
-		[string]$Path,
-
-		[Parameter(Mandatory = $false, ValueFromPipeline = $false, ValueFromPipelineByPropertyName = $true)]
-		[ValidateSet('Ps','Psm','Cs','Vb','Js', 'Asm')]
-		[array]$Type,
-
-		[Parameter(Mandatory = $false, ValueFromPipeline = $false, ValueFromPipelineByPropertyName = $true)]
-		[array]$Include = '*',
-
-		[Parameter(Mandatory = $false, ValueFromPipeline = $false, ValueFromPipelineByPropertyName = $true)]
-		[array]$Exclude = $null,
-
-		[Parameter(Mandatory = $false, ValueFromPipeline = $false, ValueFromPipelineByPropertyName = $true)]
-		[switch]$Recurse
-	)
-
-	Begin
+	Param()
+	DynamicParam
 	{
-		$MyCommand =  (Get-PSCallStack)[1].Position.Text
-		$MyCommandName = $MyInvocation.MyCommand.Name
-		$Split = $MyCommand -split "($MyCommandName)"
-		$IsDotSourced = $Split[0] -match '\.\s*$'
-		Write-Verbose "Function dot-sourced: $IsDotSourced"
+		# Stripped down version of the New-DynamicParameter function
+		# https://gallery.technet.microsoft.com/scriptcenter/New-DynamicParameter-63389a46
+		New-Module -OutVariable null -ReturnResult -AsCustomObject -ScriptBlock {
+			$DynamicParameters = @(
+				@{
+					Name = 'Path'
+					Type = [string]
+					Position = 0
+					Mandatory = $true
+					ValueFromPipeline = $true
+					ValueFromPipelineByPropertyName = $true
+					ValidateScript = {Test-Path -LiteralPath $_ -PathType Container}
+				},
+				@{
+					Name = 'Type'
+					Type = [string[]]
+					Position = 1
+					ValueFromPipelineByPropertyName = $true
+					ValidateSet = 'Ps','Psm','Cs','Vb','Js', 'Asm'
+				},
+				@{
+					Name = 'Include'
+					Type = [string]
+					Position = 2
+					ValueFromPipelineByPropertyName = $true
+				}
+				@{
+					Name = 'Exclude'
+					Type = [string]
+					Position = 3
+					ValueFromPipelineByPropertyName = $true
+				},
+				@{
+					Name = 'Recurse'
+					Type = [switch]
+					Position = 4
+					ValueFromPipelineByPropertyName = $true
+				}
+			)
+			# Creating new dynamic parameters dictionary
+			$Dictionary = New-Object -TypeName System.Management.Automation.RuntimeDefinedParameterDictionary
 
-		# Define scriptblocks that will import various file types
-		$DotSource = {. $_.FullName}
-		$AddType = {Add-Type -LiteralPath $_.FullName -ErrorAction SilentlyContinue}
-		$ImportModule = {
-			if(Get-ChildItem -Path ($_.FullName + '\*') -Filter ($_.Basename + '.*'))
-			{
-				Write-Verbose "Folder '$($_.Basename)' looks like well-formed module"
-				# https://msdn.microsoft.com/en-us/library/dd878350.aspx
-				Import-Module -Name $_.FullName -ErrorAction SilentlyContinue
-			}
-			else
-			{
-				throw "Folder '$($_.Basename)' is not a well-formed module"
-			}
-		}
+			# Strings to match attributes and validation arguments
+			$AttributeRegex = '^(Mandatory|Position|ParameterSetName|DontShow|ValueFromPipeline|ValueFromPipelineByPropertyName|ValueFromRemainingArguments)$'
+			$ValidationRegex = '^(AllowNull|AllowEmptyString|AllowEmptyCollection|ValidateCount|ValidateLength|ValidatePattern|ValidateRange|ValidateScript|ValidateSet|ValidateNotNull|ValidateNotNullOrEmpty)$'
+			$AliasRegex = '^Alias$'
 
-		# Define extensions for file types and assign import commands
-		$FileType = @{
-			Ps = @{Extension = '.ps1' ; Command = $DotSource}
-			Psm = @{Extension = [string]::Empty ; Command = $ImportModule}
-			Cs = @{Extension = '.cs' ; Command = $AddType}
-			Vb = @{Extension = '.vb' ; Command = $AddType}
-			Js = @{Extension = '.js' ; Command = $AddType}
-			Asm = @{Extension = '.dll' ; Command = $AddType}
+			$DynamicParameters | ForEach-Object {
+				# Creating new parameter''s attirubutes object'
+				$ParameterAttribute = New-Object -TypeName System.Management.Automation.ParameterAttribute
+
+				# Looping through the bound parameters, setting attirubutes
+				$CurrentParam = $_
+				switch -regex ($_.Keys)
+				{
+					$AttributeRegex
+					{
+						Try
+						{
+							# Adding new parameter attribute
+							$ParameterAttribute.$_ = $CurrentParam[$_]
+						}
+						Catch {$_}
+						continue
+					}
+				}
+
+				# Looping through the bound parameters, setting attirubutes
+				switch -regex ($_.Keys)
+				{
+					$AttributeRegex
+					{
+						Try
+						{
+							# Adding new parameter attribute
+							$ParameterAttribute.$_ = $CurrentParam[$_]
+						}
+						Catch {$_}
+						continue
+					}
+				}
+
+				# Creating new attribute collection object
+				$AttributeCollection = New-Object -TypeName Collections.ObjectModel.Collection[System.Attribute]
+
+				# Looping through the bound parameters, adding attributes
+				switch -regex ($_.Keys)
+				{
+					$ValidationRegex
+					{
+						Try
+						{
+							# Adding attribute
+							$ParameterOptions = New-Object -TypeName "System.Management.Automation.$_`Attribute" -ArgumentList $CurrentParam[$_] -ErrorAction SilentlyContinue
+							$AttributeCollection.Add($ParameterOptions)
+						}
+						Catch {$_}
+						continue
+					}
+
+					$AliasRegex
+					{
+						Try
+						{
+							# Adding alias
+							$ParameterAlias = New-Object -TypeName System.Management.Automation.AliasAttribute -ArgumentList $CurrentParam[$_] -ErrorAction SilentlyContinue
+							$AttributeCollection.Add($CurrentParam[$_])
+							continue
+						}
+						Catch {$_}
+					}
+				}
+
+				# Adding attributes to the attribute collection
+				$AttributeCollection.Add($ParameterAttribute)
+
+				# Finishing creation of the new dynamic parameter
+				$Parameter = New-Object -TypeName System.Management.Automation.RuntimeDefinedParameter -ArgumentList @($_.Name, $_.Type, $AttributeCollection)
+
+				# Adding dynamic parameter to the dynamic parameter dictionary
+				$Dictionary.Add($_.Name, $Parameter)
+			}
+
+			# Writing dynamic parameter dictionary to the pipeline
+			$Dictionary
 		}
 	}
 
 	Process
 	{
-		if($Type)
-		{
-			Write-Verbose "Trying to import file types $($Type -join ',')"
-			[array]$FileTypeToImport =  $Type | Sort-Object -Unique | ForEach-Object {$FileType.$_}
-		}
-		else
-		{
-			Write-Verbose 'Trying to import all supported file types'
-			[array]$FileTypeToImport = $FileType.GetEnumerator() | ForEach-Object {$_.Value}
-		}
+	New-Module -OutVariable null -ReturnResult -AsCustomObject -ScriptBlock {
+			Param
+			(
+				$Path,
+				$Type,
+				$Exclude,
+				$Include,
+				$Recurse,
+				$DotSource,
+				$AddType,
+				$ImportModule,
+				$IsDotSourced,
+				$SessionState
+			)
 
-		if(($FileTypeToImport).Extension -contains '.ps1' -and !$IsDotSourced)
-		{
-			Write-Warning "To import .PS1 scripts this function itself has to be dot-sourced! Example: $($Split[$Split.IndexOf($MyCommandName)] = ". $MyCommandName" ; $Split -join '')"
-		}
+			# Inherit parent's function preferences
+			# More info: https://gallery.technet.microsoft.com/scriptcenter/Inherit-Preference-82343b9d
+			$PreferenceVars = @(
+				'ErrorView', 'FormatEnumerationLimit', 'LogCommandHealthEvent', 'LogCommandLifecycleEvent',
+				'LogEngineHealthEvent', 'LogEngineLifecycleEvent', 'LogProviderHealthEvent',
+				'LogProviderLifecycleEvent', 'MaximumAliasCount', 'MaximumDriveCount', 'MaximumErrorCount',
+				'MaximumFunctionCount', 'MaximumHistoryCount', 'MaximumVariableCount', 'OFS', 'OutputEncoding',
+				'ProgressPreference', 'PSDefaultParameterValues', 'PSEmailServer', 'PSModuleAutoLoadingPreference',
+				'PSSessionApplicationName', 'PSSessionConfigurationName', 'PSSessionOption', 'ErrorActionPreference',
+				'DebugPreference', 'ConfirmPreference', 'WhatIfPreference', 'VerbosePreference', 'WarningPreference'
+			)
+			$PreferenceVars | ForEach-Object {
+				Set-Variable -Name $_ -Value $SessionState.PSVariable.GetValue($_) -Force
+			}
 
-		$FileTypeToImport |
-			ForEach-Object {
-				# We need to pass current file type to the filter function later
-				$Private:currFT = $_
-				Write-Verbose "Searching path '$Path' for file type '$(('*' + $_.Extension))'"
-				Get-ChildItem -LiteralPath $Path -Filter ('*' + $_.Extension) -Recurse:$Recurse |
-					# Process Include\Exclude parameters
-					ForEach-Object {
-						if
-						(
+			# Set default value for Include
+			if(!$Include){
+				$Include = '*'
+			}
+
+			# Define extensions for file types and assign import commands
+			$FileType = @{
+				Ps = @{Extension = '.ps1' ; Command = $DotSource}
+				Psm = @{Extension = [string]::Empty ; Command = $ImportModule}
+				Cs = @{Extension = '.cs' ; Command = $AddType}
+				Vb = @{Extension = '.vb' ; Command = $AddType}
+				Js = @{Extension = '.js' ; Command = $AddType}
+				Asm = @{Extension = '.dll' ; Command = $AddType}
+			}
+
+			if($Type)
+			{
+				Write-Verbose "Trying to import file types $($Type -join ',')"
+				[array]$FileTypeToImport = $Type | Sort-Object -Unique | ForEach-Object {$FileType.$_}
+			}
+			else
+			{
+				Write-Verbose 'Trying to import all supported file types'
+				[array]$FileTypeToImport = $FileType.GetEnumerator() | ForEach-Object {$_.Value}
+			}
+
+			if(($FileTypeToImport).Extension -contains '.ps1' -and !$IsDotSourced.True)
+			{
+				Write-Warning "To import .PS1 scripts this function itself has to be dot-sourced! Example: $($IsDotSourced.Example)"
+			}
+
+			$FileTypeToImport |
+				ForEach-Object {
+					# We need to pass current file type to the filter function later
+					$Private:currFT = $_
+					Write-Verbose "Searching path '$($Path)' for file type '$(('*' + $_.Extension))'"
+					Get-ChildItem -LiteralPath $Path -Filter ('*' + $_.Extension) -Recurse:$Recurse |
+						# Process Include\Exclude parameters
+						Where-Object {
 							# No file extension and directory = module, else - file
 							((!$Private:currFT.Extension -and $_.PSIsContainer) -or ($Private:currFT.Extension -and !$_.PSIsContainer)) -and
 							# Include\Exclude filters with wildcard support
 							$($_ |
 								Where-Object {$tmp = $_.Basename ; ($Include | Where-Object {$tmp -like $_})} |
 									Where-Object {$tmp = $_.Basename ; !($Exclude | Where-Object {$tmp -like $_})})
-						)
-						{$_}
-					} |
-						ForEach-Object {
-							Try
-							{
-								Write-Verbose "Trying to import: $_"
-								. $Private:currFT.Command
-								$Success = $true
-								$ErrMsg = $null
-								Write-Verbose 'Success'
-							}
-							Catch
-							{
-								Write-Verbose 'Failure'
-								$Success = $false
-								$ErrMsg = $_
-							}
+						} |
+							ForEach-Object {
+								Try
+								{
+									Write-Verbose "Trying to import: $_"
+									. $Private:currFT.Command $_
+									$Success = $true
+									$ErrorMessage = $null
+									Write-Verbose 'Success'
+								}
+								Catch
+								{
+									Write-Verbose 'Failure'
+									$Success = $false
+									$ErrorMessage = $_
+								}
 
-							$ret = @{
-								Name = $_.Name
-								Loaded = $Success
-								Path = $_.FullName
-								Error = $ErrMsg
-							}
+								$ret = @{
+									Name = $_.Name
+									Path = $_.FullName
+									ErrorMessage = $ErrorMessage
+									Success = $Success
+								}
 
-							Write-Verbose "Writing import status for '$_' to pipeline"
-							New-Object -TypeName PSObject -Property $ret | Select-Object -Property Name, Path, Loaded, Error
+								Write-Verbose "Writing import status for '$_' to pipeline"
+								New-Object -TypeName PSObject -Property $ret | Select-Object -Property Name, Path, ErrorMessage, Success
+							}
+				}
+			} -ArgumentList (
+				$PSBoundParameters.Path,
+				$PSBoundParameters.Type,
+				$PSBoundParameters.Exclude,
+				$PSBoundParameters.Include,
+				[bool]$PSBoundParameters.Recurse,
+				# Execution in this scope is required to import PS1 files
+				# To be executed in this scope (even when they passed to the module) scriptblocks have to be defined here
+				# http://stackoverflow.com/questions/2193410/strange-behavior-with-powershell-scriptblock-variable-scope-and-modules-any-sug/27495377#27495377
+				{. $args[0].FullName},
+				{Add-Type -LiteralPath $args[0].FullName -ErrorAction SilentlyContinue},
+				{
+					if(Get-ChildItem -Path ($args[0].FullName + '\*') -Filter ($args[0].Basename + '.*'))
+					{
+						Write-Verbose "Folder '$($args[0].Basename)' looks like well-formed module"
+						# https://msdn.microsoft.com/en-us/library/dd878350.aspx
+						Import-Module -Name $args[0].FullName -ErrorAction SilentlyContinue
+					}
+					else
+					{throw "Folder '$($args[0].Basename)' is not a well-formed module"}
+				},
+				(
+					New-Module -OutVariable null -ReturnResult -AsCustomObject -ScriptBlock {
+						# Is function dot-sourced?
+						$MyCommand = (Get-PSCallStack)[2].Position.Text
+						$MyCommandName = (Get-PSCallStack)[1].Command
+		
+						@{
+							True = $MyCommand -match "\.\s+$MyCommandName\s+"
+							Example = $MyCommand -replace "(^.*)($MyCommandName)(.*$)", '$1. $2$3'
 						}
-			}
+					}
+				),
+				$PSCmdlet.SessionState
+			)
 	}
 }
