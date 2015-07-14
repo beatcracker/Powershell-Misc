@@ -659,7 +659,7 @@ Function New-DynamicParameter {
 					{
 						Try
 						{
-							$ParameterOptions = New-Object -TypeName "System.Management.Automation.$_`Attribute" -ArgumentList (. $GetVar) -ErrorAction Stop
+							$ParameterOptions = New-Object -TypeName "System.Management.Automation.${_}Attribute" -ArgumentList (. $GetVar) -ErrorAction Stop
 							$AttributeCollection.Add($ParameterOptions)
 							Write-Debug "Added attribute: $_"
 						}
