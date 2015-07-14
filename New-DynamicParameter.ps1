@@ -659,7 +659,7 @@ Function New-DynamicParameter {
 					{
 						Try
 						{
-							$ParameterOptions = New-Object -TypeName "System.Management.Automation.$_`Attribute" -ArgumentList (. $GetVar) -ErrorAction SilentlyContinue
+							$ParameterOptions = New-Object -TypeName "System.Management.Automation.$_`Attribute" -ArgumentList (. $GetVar) -ErrorAction Stop
 							$AttributeCollection.Add($ParameterOptions)
 							Write-Debug "Added attribute: $_"
 						}
@@ -674,7 +674,7 @@ Function New-DynamicParameter {
 					{
 						Try
 						{
-							$ParameterAlias = New-Object -TypeName System.Management.Automation.AliasAttribute -ArgumentList (. $GetVar) -ErrorAction SilentlyContinue
+							$ParameterAlias = New-Object -TypeName System.Management.Automation.AliasAttribute -ArgumentList (. $GetVar) -ErrorAction Stop
 							$AttributeCollection.Add((. $GetVar))
 							Write-Debug "Added alias: $_"
 							continue
