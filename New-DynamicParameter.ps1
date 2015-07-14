@@ -569,7 +569,7 @@ Function New-DynamicParameter {
 						}
 			if($StaleKeys)
 			{
-				"Found $($StaleKeys.Count) cached bound parameters:",  $StaleKeys | Write-Debug
+				[string[]]"Found $($StaleKeys.Count) cached bound parameters:" +  $StaleKeys | Write-Debug
 				Write-Verbose 'Removing cached bound parameters'
 				$StaleKeys | ForEach-Object {[void]$PSBoundParameters.Remove($_)}
 			}
