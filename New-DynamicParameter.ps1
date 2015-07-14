@@ -675,7 +675,7 @@ Function New-DynamicParameter {
 						Try
 						{
 							$ParameterAlias = New-Object -TypeName System.Management.Automation.AliasAttribute -ArgumentList (. $GetVar) -ErrorAction Stop
-							$AttributeCollection.Add((. $GetVar))
+							$AttributeCollection.Add($ParameterAlias)
 							Write-Debug "Added alias: $_"
 							continue
 						}
