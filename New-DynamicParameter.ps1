@@ -164,7 +164,7 @@
 	Usage: Get-FreeSpace -DriveType <tab>
 
 	Parameters are defined in the array of hashtables, which is then piped through the New-Object to create PSObject and pass it to the New-DynamicParameter function.
-	Because of piping, New-DynamicParameter function is able to create all parameters at once, thus eleminating need for you to create and pass external RuntimeDefinedParameterDictionary to it.
+	Because of piping, New-DynamicParameter function is able to create all parameters at once, thus eliminating need for you to create and pass external RuntimeDefinedParameterDictionary to it.
 
 	function Get-FreeSpace
 	{
@@ -172,7 +172,7 @@
 		Param()
 		DynamicParam
 		{
-			# Array of hasthables that hold values for dynamic parameters
+			# Array of hashthables that hold values for dynamic parameters
 			$DynamicParameters = @(
 				@{
 					Name = 'Drive'
@@ -248,7 +248,7 @@
 
 	Parameters are defined in the array of hashtables, which is then piped through the New-Object to create PSObject and pass it to the New-DynamicParameter function.
 	If parameter with the same name already exist in the RuntimeDefinedParameterDictionary, a new Parameter Set is added to it.
-	Because of piping, New-DynamicParameter function is able to create all parameters at once, thus eleminating need for you to create and pass external RuntimeDefinedParameterDictionary to it.
+	Because of piping, New-DynamicParameter function is able to create all parameters at once, thus eliminating need for you to create and pass external RuntimeDefinedParameterDictionary to it.
 
 	function Get-FreeSpace
 	{
@@ -256,7 +256,7 @@
 		Param()
 		DynamicParam
 		{
-			# Array of hasthables that hold values for dynamic parameters
+			# Array of hashthables that hold values for dynamic parameters
 			$DynamicParameters = @(
 				@{
 					Name = 'Drive'
