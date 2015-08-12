@@ -330,6 +330,7 @@ Step-Dictionary -Dictionary $Dictionary -ScriptBlock {$Dictionary[$key] = Get-Ra
 
 # Remove every lowest level key
 Step-Dictionary -Dictionary $Dictionary -ScriptBlock {$Dictionary.Remove($key)}
+```
 
 ####Scripts
 
