@@ -12,6 +12,7 @@
   - [Import-Component](#import-componentps1)
   - [New-DynamicParameter](#new-dynamicparameterps1)
   - [Get-SvnAuthor](#get-svnauthorps1)
+  - [Step-Dictionary](#step-dictionaryps1)
 - [Scripts](#scripts)
   - [New-GitSvnAuthorsFile](#new-gitsvnauthorsfileps1)
 - [Modules](#modules)
@@ -290,6 +291,45 @@ John Doe
 Jane Doe
 
 ```
+
+#####`Get-SvnAuthor.ps1`
+
+	Recursively walk through each item in a dictionary and execute scriptblock against lowest level keys. You can modify and remove lowest level keys while iterating over dictionary.
+
+Features
+
+  * Recursively walk through each item in a dictionary and execute scriptblock against lowest level keys.
+  * Full comment-based help and usage examples.
+
+Usage examples
+
+
+```powershell
+
+$Dictionary = @{
+	Alfa = @{
+		Bravo = @{
+			Charlie = 'FooBar'
+			Delta = 'BarFoo'
+			Echo = 'FarBoo'
+		}
+	}
+}
+
+# Search for lowest level keys with name 'Charlie' and output their values
+Step-Dictionary -Dictionary $Dictionary -ScriptBlock {$Dictionary[$key]} -Include 'Charlie'
+
+# Search for all lowest level keys except 'Charlie' and output their values
+Step-Dictionary -Dictionary $Dictionary -ScriptBlock {$Dictionary[$key]} -Exclude 'Charlie'
+
+# Print each lowest level key name and value
+Step-Dictionary -Dictionary $Dictionary -ScriptBlock {"${key}: $($Dictionary[$key])" | Write-Host}
+
+# Set each lowest level key to random value
+Step-Dictionary -Dictionary $Dictionary -ScriptBlock {$Dictionary[$key] = Get-Random}
+
+# Remove every lowest level key
+Step-Dictionary -Dictionary $Dictionary -ScriptBlock {$Dictionary.Remove($key)}
 
 ####Scripts
 
