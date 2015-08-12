@@ -172,7 +172,7 @@
 		Param()
 		DynamicParam
 		{
-			# Array of hashthables that hold values for dynamic parameters
+			# Array of hashtables that hold values for dynamic parameters
 			$DynamicParameters = @(
 				@{
 					Name = 'Drive'
@@ -256,7 +256,7 @@
 		Param()
 		DynamicParam
 		{
-			# Array of hashthables that hold values for dynamic parameters
+			# Array of hashtables that hold values for dynamic parameters
 			$DynamicParameters = @(
 				@{
 					Name = 'Drive'
