@@ -294,7 +294,7 @@ Jane Doe
 
 #####`Step-Dictionary.ps1`
 
-	Recursively walk through each item in a dictionary and execute scriptblock against lowest level keys. You can modify and remove lowest level keys while iterating over dictionary.
+Recursively walk through each item in a dictionary and execute scriptblock against lowest level keys. You can modify and remove lowest level keys while iterating over dictionary.
 
 Features
 
