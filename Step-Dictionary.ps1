@@ -7,7 +7,7 @@
 	You can modify and remove lowest level keys while iterating over dictionary.
 
 .Parameter Dictionary
-	Dictionaty to iterate over. Must implement 'IDictionary' interface (hashtable, various .NET dictionaries).
+	Dictionary to iterate over. Must implement 'IDictionary' interface (hashtable, various .NET dictionaries).
 
 .Parameter Scriptblock
 	Scriptblock to execute. To access dictionary's key and it's value, two variables are exposed to the scriptblock:
