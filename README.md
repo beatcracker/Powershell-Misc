@@ -333,7 +333,7 @@ Step-Dictionary -Dictionary $Dictionary -ScriptBlock {$Dictionary[$key] = Get-Ra
 Step-Dictionary -Dictionary $Dictionary -ScriptBlock {$Dictionary.Remove($key)}
 ```
 
-#####`Get-SpecialFolderPath`
+#####`Get-SpecialFolderPath.ps1`
 
 Gets the path to the system special folder that is identified by the specified enumeration. On pre .NET 4.0 systems tries to map unknown [KNOWNFOLDERID](https://msdn.microsoft.com/en-us/library/windows/desktop/dd378457.aspx) to [CSIDLs](https://gist.github.com/beatcracker/4b154d46cc26776b50e7/raw/a317160dad57157f100e0f6e6d68c692c2bee7f1/ShlObj.h). This, for example allows to query for `ProgramFilesx86` directory when PowerShell is running in .Net 3.5, where [SpecialFolder enumeration](https://msdn.microsoft.com/en-us/library/system.environment.specialfolder.aspx) contains only `KNOWNFOLDERID` for `ProgramFiles`.
 
