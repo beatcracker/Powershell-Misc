@@ -13,6 +13,7 @@
   - [New-DynamicParameter](#new-dynamicparameterps1)
   - [Get-SvnAuthor](#get-svnauthorps1)
   - [Step-Dictionary](#step-dictionaryps1)
+  - [Get-SpecialFolderPath](#get-specialfolderpathps1)
 - [Scripts](#scripts)
   - [New-GitSvnAuthorsFile](#new-gitsvnauthorsfileps1)
 - [Modules](#modules)
@@ -331,6 +332,49 @@ Step-Dictionary -Dictionary $Dictionary -ScriptBlock {$Dictionary[$key] = Get-Ra
 # Remove every lowest level key
 Step-Dictionary -Dictionary $Dictionary -ScriptBlock {$Dictionary.Remove($key)}
 ```
+
+#####`Get-SpecialFolderPath`
+
+Gets the path to the system special folder that is identified by the specified enumeration. On pre .NET 4.0 systems tries to map unknown [KNOWNFOLDERID](https://msdn.microsoft.com/en-us/library/windows/desktop/dd378457.aspx) to [CSIDLs](https://gist.github.com/beatcracker/4b154d46cc26776b50e7/raw/a317160dad57157f100e0f6e6d68c692c2bee7f1/ShlObj.h). This, for example allows to query for `ProgramFilesx86` directory when PowerShell is running in .Net 3.5, where [SpecialFolder enumeration](https://msdn.microsoft.com/en-us/library/system.environment.specialfolder.aspx) contains only `KNOWNFOLDERID` for `ProgramFiles`.
+
+Features
+
+  * Gets the path to the system special folder that is identified by the specified enumeration (`CSIDL`, `KNOWNFOLDERID` or best match).
+  * Full comment-based help and usage examples.
+
+Usage examples
+
+
+* Get folder paths for 'Favorites' and Desktop folders using both `CSIDL` and `KNOWNFOLDERID`
+```powershell
+'Favorites', 'CSIDL_DESKTOP' | Get-SpecialFolderPath
+Get-SpecialFolderPath -Name 'Favorites', 'CSIDL_DESKTOP'
+```
+
+* Get folder path for Desktop folder by `CSIDL`
+```powershell
+Get-SpecialFolderPath -Csidl 'CSIDL_DESKTOP'
+```
+
+* Get folder path for 'Favorites' folder by `KNOWNFOLDERID`
+
+```powershell
+Get-SpecialFolderPath -KnownFolderId 'Favorites'
+```
+
+* Get folder path for `NetHood` `KNOWNFOLDERID`.
+```powershell
+Get-SpecialFolderPath -Name 'NetHood'
+```
+On my system, there is no `NetHood` `KNOWNFOLDERID` in SpecialFolder enumeration, so the function will fallback to `CSIDL` mapping. Example of verbose output in this situation:
+
+    VERBOSE: Checking if [System.Environment]::GetFolderPath available
+    VERBOSE: Result: True
+    VERBOSE: No KnownFolderId for: 'NetHood', trying to map to CSIDL
+    VERBOSE: KnownFolderId 'NetHood' is mapped to CSIDL(s): CSIDL_NETHOOD
+    VERBOSE: Registering type: Shell32.Tools
+    VERBOSE: Processing CSIDL(s): CSIDL_NETHOOD
+    C:\Users\beatcracker\AppData\Roaming\Microsoft\Windows\Network Shortcuts
 
 ####Scripts
 
