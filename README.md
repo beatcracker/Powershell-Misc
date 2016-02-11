@@ -379,7 +379,7 @@ On my system, there is no `NetHood` `KNOWNFOLDERID` in SpecialFolder enumeration
 
 #####`Start-ConsoleProcess.ps1`
 
-    This function will start console executable, pipe any user-specified strings to it and capture StandardOutput/StandardError streams and exit code.
+This function will start console executable, pipe any user-specified strings to it and capture `StandardOutput`/`StandardError` streams and `exit code`.
 
 Features
 
