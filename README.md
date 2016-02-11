@@ -14,6 +14,7 @@
   - [Get-SvnAuthor](#get-svnauthorps1)
   - [Step-Dictionary](#step-dictionaryps1)
   - [Get-SpecialFolderPath](#get-specialfolderpathps1)
+  - [Start-ConsoleProcess](#start-consoleprocessps1)
 - [Scripts](#scripts)
   - [New-GitSvnAuthorsFile](#new-gitsvnauthorsfileps1)
 - [Modules](#modules)
@@ -375,6 +376,56 @@ On my system, there is no `NetHood` `KNOWNFOLDERID` in SpecialFolder enumeration
     VERBOSE: Registering type: Shell32.Tools
     VERBOSE: Processing CSIDL(s): CSIDL_NETHOOD
     C:\Users\beatcracker\AppData\Roaming\Microsoft\Windows\Network Shortcuts
+
+#####`Start-ConsoleProcess.ps1`
+
+    This function will start console executable, pipe any user-specified strings to it and capture StandardOutput/StandardError streams and exit code.
+
+Features
+
+  * Returns object with following properties:
+    * `StdOut` - array of strings captured from `StandardOutput`
+    * `StdErr` - array of strings captured from `StandardError`
+    * `ExitCode` - exit code set by executable
+  * Full comment-based help and usage examples.
+
+Usage examples
+
+* Starts `find.exe` and captures its output. Because no arguments specified, `find.exe` prints error to `StandardError` stream, which is captured by the function.
+```powershell
+Start-ConsoleProcess -FilePath find
+
+StdOut StdErr                               ExitCode
+------ ------                               --------
+{}     {FIND: Parameter format not correct}        2
+```
+
+* Starts `diskpart.exe`, pipes strings to its StandardInput and captures output. `Diskpart.exe` will accept piped strings as if they were typed in the interactive session and list all disks and volumes on the PC.
+
+Note that running `diskpart` requires already elevated PowerShell console. Otherwise, you will recieve elevation request and `diskpart` will run, however, no strings would be piped to it.
+```
+$Result = 'list disk', 'list volume' | Start-ConsoleProcess -FilePath diskpart
+$Result.StdOut
+
+Microsoft DiskPart version 6.3.9600
+
+Copyright (C) 1999-2013 Microsoft Corporation.
+On computer: HAL9000
+
+DISKPART> 
+  Disk ###  Status         Size     Free     Dyn  Gpt
+  --------  -------------  -------  -------  ---  ---
+  Disk 0    Online          298 GB      0 B         
+
+DISKPART> 
+  Volume ###  Ltr  Label        Fs     Type        Size     Status     Info
+  ----------  ---  -----------  -----  ----------  -------  ---------  --------
+  Volume 0     E                       DVD-ROM         0 B  No Media           
+  Volume 1     C   System       NTFS   Partition    100 GB  Healthy    System  
+  Volume 2     D   Storage      NTFS   Partition    198 GB  Healthy            
+
+DISKPART> 
+```
 
 ####Scripts
 
