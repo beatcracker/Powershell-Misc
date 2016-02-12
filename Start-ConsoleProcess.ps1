@@ -126,14 +126,12 @@
 #>
 function Start-ConsoleProcess
 {
-    [CmdletBinding()]
     Param
     (
-        [Parameter(Mandatory = $true, ValueFromPipelineByPropertyName = $true)]
+        [Parameter(Mandatory = $true)]
         [ValidateNotNullOrEmpty()]
         [string]$FilePath,
 
-        [Parameter(ValueFromPipelineByPropertyName = $true)]
         [string[]]$ArgumentList,
 
         [Parameter(ValueFromPipeline = $true)]
@@ -142,7 +140,6 @@ function Start-ConsoleProcess
 
     End
     {
-        $Psb = $PSBoundParameters
         if($Input)
         {
             # Collect all pipeline input
