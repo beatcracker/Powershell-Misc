@@ -142,11 +142,21 @@ function Start-ConsoleProcess
 
     End
     {
-        # http://www.powertheshell.com/input_psv3/
-        $StdIn = @($Input)
+        $Psb = $PSBoundParameters
+        if($Input)
+        {
+            # Collect all pipeline input
+            # http://www.powertheshell.com/input_psv3/
+            $StdIn = @($Input)
+        }
+        else
+        {
+            $StdIn = $InputObject
+        }
+
         try
         {
-            "Starting process: $FilePath","Redirect StdIn: $([bool]$StdIn.Count)", "Arguments: $ArgumentList" | Write-Verbose
+            "Starting process: $FilePath", "Redirect StdIn: $([bool]$StdIn.Count)", "Arguments: $ArgumentList" | Write-Verbose
 
             if($StdIn.Count)
             {
@@ -169,6 +179,8 @@ function Start-ConsoleProcess
 
         foreach($item in $Output)
         {
+            # Data from StdOut will be strings, while StdErr produces
+            # System.Management.Automation.ErrorRecord objects.
             # http://stackoverflow.com/a/33002914/4424236
             if($item.Exception.Message)
             {
@@ -181,10 +193,10 @@ function Start-ConsoleProcess
         }
 
         Write-Verbose 'Returning result'
-        New-Object -TypeName pscustomobject -Property @{
+        New-Object -TypeName PSCustomObject -Property @{
             ExitCode = $LASTEXITCODE
             StdOut = $StdOut.ToArray()
             StdErr = $StdErr.ToArray()
-        } | Select-Object StdOut, StdErr, ExitCode
+        } | Select-Object -Property StdOut, StdErr, ExitCode
     }
 }
