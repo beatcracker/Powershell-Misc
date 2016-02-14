@@ -406,28 +406,36 @@ $Result = Start-ConsoleProcess -FilePath robocopy -ArgumentList 'C:\Src', 'C:\Ds
 $Result.StdOut
 
 -------------------------------------------------------------------------------
-    ROBOCOPY     ::     Robust File Copy for Windows                              
+   ROBOCOPY     ::     Robust File Copy for Windows                              
 -------------------------------------------------------------------------------
-    Started : 01 January 2016 y. 00:00:01
-    Source : C:\Src\
-        Dest : C:\Dst\
+
+  Started : 01 January 2016 y. 00:00:01
+   Source : C:\Src\
+     Dest : C:\Dst\
+
     Files : *.*
-	    
-    Options : *.* /S /E /DCOPY:DA /COPY:DAT /PURGE /MIR /R:1000000 /W:30 
+    
+  Options : *.* /S /E /DCOPY:DA /COPY:DAT /PURGE /MIR /R:1000000 /W:30 
+
 ------------------------------------------------------------------------------
-	                    1	C:\Src\
-	    New File  		       6	Readme.txt
-    0%  
+
+                       1	C:\Src\
+        New File  		       6	Readme.txt
+  0%  
 100%  
+
 ------------------------------------------------------------------------------
-                Total    Copied   Skipped  Mismatch    FAILED    Extras
+
+               Total    Copied   Skipped  Mismatch    FAILED    Extras
     Dirs :         1         0         0         0         0         0
-    Files :         1         1         0         0         0         0
-    Bytes :         6         6         0         0         0         0
-    Times :   0:00:00   0:00:00                       0:00:00   0:00:00
-    Speed :                 103 Bytes/sec.
-    Speed :               0.005 MegaBytes/min.
-    Ended : 01 January 2016 y. 00:00:01
+   Files :         1         1         0         0         0         0
+   Bytes :         6         6         0         0         0         0
+   Times :   0:00:00   0:00:00                       0:00:00   0:00:00
+
+
+   Speed :                 103 Bytes/sec.
+   Speed :               0.005 MegaBytes/min.
+   Ended : 01 January 2016 y. 00:00:01
 ```
 
 
