@@ -391,7 +391,7 @@ Features
 
 Usage examples
 
-* Starts `find.exe` and captures its output. Because no arguments specified, `find.exe` prints error to `StandardError` stream, which is captured by the function.
+* Start `find.exe` and capture its output. Because no arguments specified, `find.exe` prints error to `StandardError` stream, which is captured by the function.
 ```powershell
 Start-ConsoleProcess -FilePath find
 
@@ -400,7 +400,38 @@ StdOut StdErr                               ExitCode
 {}     {FIND: Parameter format not correct}        2
 ```
 
-* Starts `diskpart.exe`, pipes strings to its StandardInput and captures output. `Diskpart.exe` will accept piped strings as if they were typed in the interactive session and list all disks and volumes on the PC.
+* Start `robocopy.exe` with arguments  and capture its output. `Robocopy.exe` will mirror contents of the `C:\Src` folder to `C:\Dst` and print log to `StandardOutput` stream, which is captured by the function.
+```powershell
+$Result = Start-ConsoleProcess -FilePath robocopy -ArgumentList 'C:\Src', 'C:\Dst', '/mir'
+$Result.StdOut
+
+-------------------------------------------------------------------------------
+    ROBOCOPY     ::     Robust File Copy for Windows                              
+-------------------------------------------------------------------------------
+    Started : 01 January 2016 y. 00:00:01
+    Source : C:\Src\
+        Dest : C:\Dst\
+    Files : *.*
+	    
+    Options : *.* /S /E /DCOPY:DA /COPY:DAT /PURGE /MIR /R:1000000 /W:30 
+------------------------------------------------------------------------------
+	                    1	C:\Src\
+	    New File  		       6	Readme.txt
+    0%  
+100%  
+------------------------------------------------------------------------------
+                Total    Copied   Skipped  Mismatch    FAILED    Extras
+    Dirs :         1         0         0         0         0         0
+    Files :         1         1         0         0         0         0
+    Bytes :         6         6         0         0         0         0
+    Times :   0:00:00   0:00:00                       0:00:00   0:00:00
+    Speed :                 103 Bytes/sec.
+    Speed :               0.005 MegaBytes/min.
+    Ended : 01 January 2016 y. 00:00:01
+```
+
+
+* Start `diskpart.exe`, pipe strings to its StandardInput and capture output. `Diskpart.exe` will accept piped strings as if they were typed in the interactive session and list all disks and volumes on the PC.
 
 Note that running `diskpart` requires already elevated PowerShell console. Otherwise, you will recieve elevation request and `diskpart` will run, however, no strings would be piped to it.
 ```
