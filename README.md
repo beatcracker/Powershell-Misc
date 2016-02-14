@@ -431,7 +431,7 @@ $Result.StdOut
 ```
 
 
-* Start `diskpart.exe`, pipe strings to its StandardInput and capture output. `Diskpart.exe` will accept piped strings as if they were typed in the interactive session and list all disks and volumes on the PC.
+* Start `diskpart.exe`, pipe strings to its StandardInput and capture its output. `Diskpart.exe` will accept piped strings as if they were typed in the interactive session and list all disks and volumes on the PC.
 
 Note that running `diskpart` requires already elevated PowerShell console. Otherwise, you will recieve elevation request and `diskpart` will run, however, no strings would be piped to it.
 ```
