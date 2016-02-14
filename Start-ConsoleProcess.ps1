@@ -26,7 +26,7 @@
 .Example
     Start-ConsoleProcess -FilePath find
 
-    Starts find.exe and captures its output.
+    Start find.exe and capture its output.
     Because no arguments specified, find.exe prints error to StandardError stream,
     which is captured by the function:
 
@@ -37,7 +37,7 @@
 .Example
     'aaa', 'bbb', 'ccc' | Start-ConsoleProcess -FilePath find -ArgumentList '"aaa"'
 
-    Starts find.exe, pipes strings to its StandardInput and captures output.
+    Start find.exe, pipe strings to its StandardInput and capture its output.
     Find.exe will attempt to find string "aaa" in StandardInput stream and
     print matches to StandardOutput stream, which is captured by the function:
 
@@ -48,7 +48,7 @@
 .Example
     'list disk', 'list volume' | Start-ConsoleProcess -FilePath diskpart
 
-    Starts diskpart.exe, pipes strings to its StandardInput and captures output.
+    Start diskpart.exe, pipe string to its StandardInput and capture its output.
     Diskpart.exe will accept piped strings as if they were typed in the interactive session
     and list all disks and volumes on the PC.
 
@@ -83,7 +83,7 @@
 .Example
     Start-ConsoleProcess -FilePath robocopy -ArgumentList 'C:\Src', 'C:\Dst', '/mir'
 
-    Start robocopy.exe with arguments.
+    Start robocopy.exe with arguments and capture its output.
     Robocopy.exe will mirror contents of the 'C:\Src' folder to 'C:\Dst'
     and print log to StandardOutput stream, which is captured by the function.
 
