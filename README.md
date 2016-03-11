@@ -15,6 +15,7 @@
   - [Step-Dictionary](#step-dictionaryps1)
   - [Get-SpecialFolderPath](#get-specialfolderpathps1)
   - [Start-ConsoleProcess](#start-consoleprocessps1)
+  - [Remove-ComObject](#remove-comobjectps1)
 - [Scripts](#scripts)
   - [New-GitSvnAuthorsFile](#new-gitsvnauthorsfileps1)
 - [Modules](#modules)
@@ -464,6 +465,29 @@ DISKPART>
   Volume 2     D   Storage      NTFS   Partition    198 GB  Healthy            
 
 DISKPART> 
+```
+
+#####`Remove-ComObject.ps1`
+
+Release COM object and remove associated variable. COM object is released using [Marshal.FinalReleaseComObject](https://msdn.microsoft.com/en-us/library/system.runtime.interopservices.marshal.finalreleasecomobject.aspx) method call. Optionally you can force garbage collection.
+
+Features
+
+  * Release COM object and remove associated variable.
+  * Full comment-based help and usage examples.
+
+Usage examples
+
+* Removes COM object stored in variable `$Ie` and variable itself.
+
+```powershell
+# Create Internet Explorer COM object
+$Ie = New-Object -ComObject InternetExplorer.Application
+
+# ... do stuff ...
+
+# Remove Internet Explorer COM object
+Remove-ComObject -Name Ie
 ```
 
 ####Scripts
