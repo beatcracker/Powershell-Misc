@@ -513,7 +513,7 @@ Usage example
 
 ## Modules
 
-### [PsIniParser](tree/master/PsIniParser)
+### [PsIniParser](PsIniParser)
 
 This module allows to import, export and convert INI files (and strings) to hashtables (or objects) and vice versa. You can specify various parsing options (INI files are not standardized), or use specific encoding while reading a file.
 
