@@ -1,6 +1,6 @@
-##### Miscellaneous PowerShell goodies
+# Miscellaneous PowerShell goodies
 
-#### Table of Contents
+## Table of Contents
 
 - [How to use Functions\Scripts](#how-to-use-functionsscripts)
   - [In PowerShell console\PowerShell ISE script pane](#in-powershell-consolepowershell-ise-script-pane)
@@ -21,13 +21,13 @@
 - [Modules](#modules)
   - [PsIniParser](#psiniparser)
 
-#### How to use Functions\Scripts
+## How to use Functions\Scripts
 
 The best way to use provided functions is a [dot-sourcing](http://ss64.com/ps/source.html).
 
 Dot-sourcing runs a script file in the current scope so that any functions, aliases, and variables that the script file creates are added to the current scope. 
 
-##### In PowerShell console\PowerShell ISE script pane
+### In PowerShell console\PowerShell ISE script pane
 
 *Note the space between first dot and path!*
 
@@ -60,7 +60,7 @@ Congratulations, you can now make use of newly added function!
 
 ```
 
-##### In your own script
+### In your own script
 
 *Note the space between first dot and path!*
 
@@ -80,7 +80,7 @@ $ScriptDir = Split-Path $script:MyInvocation.MyCommand.Path
 
 ```
 
-#### How to use Modules
+## How to use Modules
 Download\clone this repository and copy module folder to your PowerShell modules folder. If you downloaded repository as ZIP file, you need to unblock it first:
 
 * Using GUI: right-click ZIP file, click `Properties` and then click the `Unblock` button.
@@ -109,9 +109,9 @@ Alternatively, you can import module from any location:
 Import-Module -Name 'X:\Path\to\module_folder'
 ```
 
-#### Functions
+## Functions
 
-##### [Get-TerminologyTranslation](Get-TerminologyTranslation.ps1)
+### [Get-TerminologyTranslation](Get-TerminologyTranslation.ps1)
 
 Enables user to look up terminology translations and user-interface translations from actual Microsoft products via [Microsoft Terminology Service API](http://www.microsoft.com/Language/en-US/Microsoft-Terminology-API.aspx). For details see [ Terminology Service API SDK PDF](http://download.microsoft.com/download/1/5/D/15D3DDC6-7403-4366-BE99-AF5247ADEF1C/Microsoft-Terminology-API-SDK.pdf).
 
@@ -154,7 +154,7 @@ Schwerwiegender Fehler
 Управление приложениями
 ```
 
-##### [Split-CommandLine](Split-CommandLine.ps1)
+### [Split-CommandLine](Split-CommandLine.ps1)
 
 PowerShell version of [EchoArgs](http://blogs.technet.com/b/heyscriptingguy/archive/2011/09/20/solve-problems-with-external-command-lines-in-powershell.aspx). This is the Cmdlet version of the code from the article [PowerShell and external commands done right](http://edgylogic.com/blog/powershell-and-external-commands-done-right). It can parse command-line arguments using Win32 API function [CommandLineToArgvW](http://msdn.microsoft.com/en-us/library/windows/desktop/bb776391.aspx) and echo command line arguments back out to the console for your review.
 
@@ -181,7 +181,7 @@ c:\windows\notepad.exe
 test.txt
 ```
 
-##### [Import-Component](Import-Component.ps1)
+### [Import-Component](Import-Component.ps1)
 
 Bulk-import from folder any component, supported by PowerShell (script, module, source code, .Net assembly).
 
@@ -209,7 +209,7 @@ Usage example
 ```powershell
 . Import-Component 'C:\PsLib' -Recurse -Include 'MyScript*','*MyLib*' -Exclude '*_backup*','*_old*'
 ```
-##### [New-DynamicParameter](New-DynamicParameter.ps1)
+### [New-DynamicParameter](New-DynamicParameter.ps1)
 
 Helper function to simplify creating [dynamic parameters](https://technet.microsoft.com/en-us/library/hh847743.aspx).
 Example use cases:
@@ -274,7 +274,7 @@ function Get-FreeSpace
 }
 ```
 
-##### [Get-SvnAuthor](Get-SvnAuthor.ps1)
+### [Get-SvnAuthor](Get-SvnAuthor.ps1)
 
 Get list of unique commit authors in one or more SVN repositories. Requires Subversion binaries. Can be used to create authors file for SVN to Git migrations.
 
@@ -295,7 +295,7 @@ Jane Doe
 
 ```
 
-##### [Step-Dictionary](Step-Dictionary.ps1)
+### [Step-Dictionary](Step-Dictionary.ps1)
 
 Recursively walk through each item in a dictionary and execute scriptblock against lowest level keys. You can modify and remove lowest level keys while iterating over dictionary.
 
@@ -335,7 +335,7 @@ Step-Dictionary -Dictionary $Dictionary -ScriptBlock {$Dictionary[$key] = Get-Ra
 Step-Dictionary -Dictionary $Dictionary -ScriptBlock {$Dictionary.Remove($key)}
 ```
 
-##### [Get-SpecialFolderPath](Get-SpecialFolderPath.ps1)
+### [Get-SpecialFolderPath](Get-SpecialFolderPath.ps1)
 
 Gets the path to the system special folder that is identified by the specified enumeration. On pre .NET 4.0 systems tries to map unknown [KNOWNFOLDERID](https://msdn.microsoft.com/en-us/library/windows/desktop/dd378457.aspx) to [CSIDLs](https://gist.github.com/beatcracker/4b154d46cc26776b50e7/raw/a317160dad57157f100e0f6e6d68c692c2bee7f1/ShlObj.h). This, for example allows to query for `ProgramFilesx86` directory when PowerShell is running in .Net 3.5, where [SpecialFolder enumeration](https://msdn.microsoft.com/en-us/library/system.environment.specialfolder.aspx) contains only `KNOWNFOLDERID` for `ProgramFiles`.
 
@@ -378,7 +378,7 @@ On my system, there is no `NetHood` `KNOWNFOLDERID` in SpecialFolder enumeration
     VERBOSE: Processing CSIDL(s): CSIDL_NETHOOD
     C:\Users\beatcracker\AppData\Roaming\Microsoft\Windows\Network Shortcuts
 
-##### [Start-ConsoleProcess](Start-ConsoleProcess.ps1)
+### [Start-ConsoleProcess](Start-ConsoleProcess.ps1)
 
 This function will start console executable, pipe any user-specified strings to it and capture `StandardOutput`/`StandardError` streams and `exit code`.
 
@@ -467,7 +467,7 @@ DISKPART>
 DISKPART> 
 ```
 
-##### [Remove-ComObject](Remove-ComObject.ps1)
+### [Remove-ComObject](Remove-ComObject.ps1)
 
 Release COM object and remove associated variable. COM object is released using [Marshal.FinalReleaseComObject](https://msdn.microsoft.com/en-us/library/system.runtime.interopservices.marshal.finalreleasecomobject.aspx) method call. Optionally you can force garbage collection.
 
@@ -490,9 +490,9 @@ $Ie = New-Object -ComObject InternetExplorer.Application
 Remove-ComObject -Name Ie
 ```
 
-#### Scripts
+## Scripts
 
-##### [New-GitSvnAuthorsFile](New-GitSvnAuthorsFile.ps1)
+### [New-GitSvnAuthorsFile](New-GitSvnAuthorsFile.ps1)
 
 Generate authors file for one or more SVN repositories to assist SVN to Git migrations.	Can map SVN authors to domain accounts and get full names and emails from Active Directory. Requires Subversion binaries and [Get-SvnAuthor](#get-svnauthor) function.
 
@@ -511,9 +511,9 @@ Usage example
 
 ```
 
-#### Modules
+## Modules
 
-##### [PsIniParser](tree/master/PsIniParser)
+### [PsIniParser](tree/master/PsIniParser)
 
 This module allows to import, export and convert INI files (and strings) to hashtables (or objects) and vice versa. You can specify various parsing options (INI files are not standardized), or use specific encoding while reading a file.
 
