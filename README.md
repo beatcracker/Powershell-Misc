@@ -111,7 +111,7 @@ Import-Module -Name 'X:\Path\to\module_folder'
 
 #### Functions
 
-##### [Get-TerminologyTranslation](blob/master/Get-TerminologyTranslation.ps1)
+##### [Get-TerminologyTranslation](Get-TerminologyTranslation.ps1)
 
 Enables user to look up terminology translations and user-interface translations from actual Microsoft products via [Microsoft Terminology Service API](http://www.microsoft.com/Language/en-US/Microsoft-Terminology-API.aspx). For details see [ Terminology Service API SDK PDF](http://download.microsoft.com/download/1/5/D/15D3DDC6-7403-4366-BE99-AF5247ADEF1C/Microsoft-Terminology-API-SDK.pdf).
 
@@ -154,7 +154,7 @@ Schwerwiegender Fehler
 Управление приложениями
 ```
 
-##### [Split-CommandLine](blob/master/Split-CommandLine.ps1)
+##### [Split-CommandLine](Split-CommandLine.ps1)
 
 PowerShell version of [EchoArgs](http://blogs.technet.com/b/heyscriptingguy/archive/2011/09/20/solve-problems-with-external-command-lines-in-powershell.aspx). This is the Cmdlet version of the code from the article [PowerShell and external commands done right](http://edgylogic.com/blog/powershell-and-external-commands-done-right). It can parse command-line arguments using Win32 API function [CommandLineToArgvW](http://msdn.microsoft.com/en-us/library/windows/desktop/bb776391.aspx) and echo command line arguments back out to the console for your review.
 
@@ -181,7 +181,7 @@ c:\windows\notepad.exe
 test.txt
 ```
 
-##### [Import-Component](blob/master/Import-Component.ps1)
+##### [Import-Component](Import-Component.ps1)
 
 Bulk-import from folder any component, supported by PowerShell (script, module, source code, .Net assembly).
 
@@ -209,7 +209,7 @@ Usage example
 ```powershell
 . Import-Component 'C:\PsLib' -Recurse -Include 'MyScript*','*MyLib*' -Exclude '*_backup*','*_old*'
 ```
-##### [New-DynamicParameter](blob/master/New-DynamicParameter.ps1)
+##### [New-DynamicParameter](New-DynamicParameter.ps1)
 
 Helper function to simplify creating [dynamic parameters](https://technet.microsoft.com/en-us/library/hh847743.aspx).
 Example use cases:
@@ -218,7 +218,7 @@ Example use cases:
  - Provide tab completion and intellisense for parameters, depending on the environment
 
 Credits to Justin Rich ([blog](http://jrich523.wordpress.com), [GitHub](https://github.com/jrich523)) and Warren F. ([blog](http://ramblingcookiemonster.github.io), [GitHub](https://github.com/RamblingCookieMonster)) for their initial code and inspiration:
- - [New-DynamicParam.ps1](https://github.com/RamblingCookieMonster/PowerShell/blob/master/New-DynamicParam.ps1)
+ - [New-DynamicParam.ps1](https://github.com/RamblingCookieMonster/PowerShell/New-DynamicParam.ps1)
  - [Credentials and Dynamic Parameters](http://ramblingcookiemonster.wordpress.com/2014/11/27/quick-hits-credentials-and-dynamic-parameters/)
  - [PowerShell: Simple way to add dynamic parameters to advanced function](http://jrich523.wordpress.com/2013/05/30/powershell-simple-way-to-add-dynamic-parameters-to-advanced-function/)
 
@@ -274,7 +274,7 @@ function Get-FreeSpace
 }
 ```
 
-##### [Get-SvnAuthor](blob/master/Get-SvnAuthor.ps1)
+##### [Get-SvnAuthor](Get-SvnAuthor.ps1)
 
 Get list of unique commit authors in one or more SVN repositories. Requires Subversion binaries. Can be used to create authors file for SVN to Git migrations.
 
@@ -295,7 +295,7 @@ Jane Doe
 
 ```
 
-##### [Step-Dictionary](blob/master/Step-Dictionary.ps1)
+##### [Step-Dictionary](Step-Dictionary.ps1)
 
 Recursively walk through each item in a dictionary and execute scriptblock against lowest level keys. You can modify and remove lowest level keys while iterating over dictionary.
 
@@ -335,7 +335,7 @@ Step-Dictionary -Dictionary $Dictionary -ScriptBlock {$Dictionary[$key] = Get-Ra
 Step-Dictionary -Dictionary $Dictionary -ScriptBlock {$Dictionary.Remove($key)}
 ```
 
-##### [Get-SpecialFolderPath](blob/master/Get-SpecialFolderPath.ps1)
+##### [Get-SpecialFolderPath](Get-SpecialFolderPath.ps1)
 
 Gets the path to the system special folder that is identified by the specified enumeration. On pre .NET 4.0 systems tries to map unknown [KNOWNFOLDERID](https://msdn.microsoft.com/en-us/library/windows/desktop/dd378457.aspx) to [CSIDLs](https://gist.github.com/beatcracker/4b154d46cc26776b50e7/raw/a317160dad57157f100e0f6e6d68c692c2bee7f1/ShlObj.h). This, for example allows to query for `ProgramFilesx86` directory when PowerShell is running in .Net 3.5, where [SpecialFolder enumeration](https://msdn.microsoft.com/en-us/library/system.environment.specialfolder.aspx) contains only `KNOWNFOLDERID` for `ProgramFiles`.
 
@@ -378,7 +378,7 @@ On my system, there is no `NetHood` `KNOWNFOLDERID` in SpecialFolder enumeration
     VERBOSE: Processing CSIDL(s): CSIDL_NETHOOD
     C:\Users\beatcracker\AppData\Roaming\Microsoft\Windows\Network Shortcuts
 
-##### [Start-ConsoleProcess](blob/master/Start-ConsoleProcess.ps1)
+##### [Start-ConsoleProcess](Start-ConsoleProcess.ps1)
 
 This function will start console executable, pipe any user-specified strings to it and capture `StandardOutput`/`StandardError` streams and `exit code`.
 
@@ -467,7 +467,7 @@ DISKPART>
 DISKPART> 
 ```
 
-##### [Remove-ComObject](blob/master/Remove-ComObject.ps1)
+##### [Remove-ComObject](Remove-ComObject.ps1)
 
 Release COM object and remove associated variable. COM object is released using [Marshal.FinalReleaseComObject](https://msdn.microsoft.com/en-us/library/system.runtime.interopservices.marshal.finalreleasecomobject.aspx) method call. Optionally you can force garbage collection.
 
@@ -492,7 +492,7 @@ Remove-ComObject -Name Ie
 
 #### Scripts
 
-##### [New-GitSvnAuthorsFile](blob/master/New-GitSvnAuthorsFile.ps1)
+##### [New-GitSvnAuthorsFile](New-GitSvnAuthorsFile.ps1)
 
 Generate authors file for one or more SVN repositories to assist SVN to Git migrations.	Can map SVN authors to domain accounts and get full names and emails from Active Directory. Requires Subversion binaries and [Get-SvnAuthor](#get-svnauthor) function.
 
