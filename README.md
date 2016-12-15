@@ -116,7 +116,7 @@ Import-Module -Name 'X:\Path\to\module_folder'
 
 Enables user to look up terminology translations and user-interface translations from actual Microsoft products via [Microsoft Terminology Service API](http://www.microsoft.com/Language/en-US/Microsoft-Terminology-API.aspx). For details see [ Terminology Service API SDK PDF](http://download.microsoft.com/download/1/5/D/15D3DDC6-7403-4366-BE99-AF5247ADEF1C/Microsoft-Terminology-API-SDK.pdf).
 
-Features
+#### Features
 
   * Any-to-any language translation searches, e.g. Japanese to/from French or any other language combination.
   * Filter searches with string case and hotkey sensitivity.
@@ -125,7 +125,7 @@ Features
   * Get list of products supported by the Terminology Service API.
   * Full comment-based help and usage examples.
 
-Usage examples:
+#### Usage examples
 
 * Ever wonder how [Cherokee](http://en.wikipedia.org/wiki/Cherokee) spell `Start menu`?
 ```powershell
@@ -159,12 +159,12 @@ Schwerwiegender Fehler
 
 PowerShell version of [EchoArgs](http://blogs.technet.com/b/heyscriptingguy/archive/2011/09/20/solve-problems-with-external-command-lines-in-powershell.aspx). This is the Cmdlet version of the code from the article [PowerShell and external commands done right](http://edgylogic.com/blog/powershell-and-external-commands-done-right). It can parse command-line arguments using Win32 API function [CommandLineToArgvW](http://msdn.microsoft.com/en-us/library/windows/desktop/bb776391.aspx) and echo command line arguments back out to the console for your review.
 
-Features
+#### Features
 
   * Parse arbitrary command-line, or if none specified, the command-line of the current PowerShell host.
   * Full comment-based help and usage examples.
 
-Usage examples:
+#### Usage examples
 
 * Parse user-specified command-line
 ```powershell
@@ -186,7 +186,7 @@ test.txt
 
 Bulk-import from folder any component, supported by PowerShell (script, module, source code, .Net assembly).
 
-Features
+#### Features
 
   * Supported components:
     * Script (.ps1) - imported using [Dot-Sourcing](http://ss64.com/ps/source.html).
@@ -203,7 +203,7 @@ __WARNING: To import .PS1 scripts this function itself has to be dot-sourced!__ 
 . Import-Component 'C:\PsLib'
 ```
 
-Usage example
+#### Usage examples
 
 * Import all supported components (`.ps1`, `module`, `.cs`, `.vb`, `.js`, `.dll`), recurse into subdirectories. Include only files with names without extension that match wildcards `MyScript*` and `*MyLib*`. Exclude files with names without extension that match `*_backup*` and `*_old*` wildcards.
 
@@ -225,12 +225,12 @@ Credits to Justin Rich ([blog](http://jrich523.wordpress.com), [GitHub](https://
 
 Credit to BM for alias and type parameters and their handling.
 
-Features
+#### Features
 
   * Create dynamic parameters for your functions on the fly.
   * Full comment-based help and usage examples.
 
-Usage example
+#### Usage examples
 
 * Create one dynamic parameter. This example illustrates the use of `New-DynamicParameter` to create a single dynamic parameter. The `Drive`'s parameter `ValidateSet` is populated with all available volumes on the computer for handy tab completion / intellisense. 
 
@@ -279,12 +279,12 @@ function Get-FreeSpace
 
 Get list of unique commit authors in one or more SVN repositories. Requires Subversion binaries. Can be used to create authors file for SVN to Git migrations.
 
-Features
+#### Features
 
   * Get list of unique commit authors in one or more SVN repositories.
   * Full comment-based help and usage examples.
 
-Usage example
+#### Usage examples
 
 * Get list of unique commit authors for SVN repository `http://svnserver/svn/project`
 
@@ -300,12 +300,12 @@ Jane Doe
 
 Recursively walk through each item in a dictionary and execute scriptblock against lowest level keys. You can modify and remove lowest level keys while iterating over dictionary.
 
-Features
+#### Features
 
   * Recursively walk through each item in a dictionary and execute scriptblock against lowest level keys.
   * Full comment-based help and usage examples.
 
-Usage examples
+#### Usage examples
 
 
 ```powershell
@@ -340,12 +340,12 @@ Step-Dictionary -Dictionary $Dictionary -ScriptBlock {$Dictionary.Remove($key)}
 
 Gets the path to the system special folder that is identified by the specified enumeration. On pre .NET 4.0 systems tries to map unknown [KNOWNFOLDERID](https://msdn.microsoft.com/en-us/library/windows/desktop/dd378457.aspx) to [CSIDLs](https://gist.github.com/beatcracker/4b154d46cc26776b50e7/raw/a317160dad57157f100e0f6e6d68c692c2bee7f1/ShlObj.h). This, for example allows to query for `ProgramFilesx86` directory when PowerShell is running in .Net 3.5, where [SpecialFolder enumeration](https://msdn.microsoft.com/en-us/library/system.environment.specialfolder.aspx) contains only `KNOWNFOLDERID` for `ProgramFiles`.
 
-Features
+#### Features
 
   * Gets the path to the system special folder that is identified by the specified enumeration (`CSIDL`, `KNOWNFOLDERID` or best match).
   * Full comment-based help and usage examples.
 
-Usage examples
+#### Usage examples
 
 
 * Get folder paths for 'Favorites' and Desktop folders using both `CSIDL` and `KNOWNFOLDERID`
@@ -383,7 +383,7 @@ On my system, there is no `NetHood` `KNOWNFOLDERID` in SpecialFolder enumeration
 
 This function will start console executable, pipe any user-specified strings to it and capture `StandardOutput`/`StandardError` streams and `exit code`.
 
-Features
+#### Features
 
   * Returns object with following properties:
     * `StdOut` - array of strings captured from `StandardOutput`
@@ -391,7 +391,7 @@ Features
     * `ExitCode` - exit code set by executable
   * Full comment-based help and usage examples.
 
-Usage examples
+#### Usage examples
 
 * Start `find.exe` and capture its output. Because no arguments specified, `find.exe` prints error to `StandardError` stream, which is captured by the function.
 ```powershell
@@ -472,12 +472,12 @@ DISKPART>
 
 Release COM object and remove associated variable. COM object is released using [Marshal.FinalReleaseComObject](https://msdn.microsoft.com/en-us/library/system.runtime.interopservices.marshal.finalreleasecomobject.aspx) method call. Optionally you can force garbage collection.
 
-Features
+#### Features
 
   * Release COM object and remove associated variable.
   * Full comment-based help and usage examples.
 
-Usage examples
+#### Usage examples
 
 * Removes COM object stored in variable `$Ie` and variable itself.
 
@@ -497,12 +497,12 @@ Wrapper around Win32 API functions for managing (Group) Managed Service Accounts
 
 Unlike it's counterparts in the 'Active Directory' module, which [require CredSSP](http://serverfault.com/questions/203123/unable-able-to-run-remote-powershell-using-active-directory) to be configured when used over PSRemoting, this function works with [resource-based Kerberos constrained delegation](https://blogs.technet.microsoft.com/ashleymcglone/2016/08/30/powershell-remoting-kerberos-double-hop-solved-securely/).
 
-Features
+#### Features
 
   * Test/Add/Remove (Group) Managed Service Accounts
   * Full comment-based help and usage examples.
 
-Usage examples
+#### Usage examples
 
 * Test whether the specified standalone managed service account (sMSA) or group managed service account (gMSA) exists in the Netlogon store on the this server.
 
@@ -534,13 +534,13 @@ Usage examples
 
 Generate authors file for one or more SVN repositories to assist SVN to Git migrations.	Can map SVN authors to domain accounts and get full names and emails from Active Directory. Requires Subversion binaries and [Get-SvnAuthor](#get-svnauthor) function.
 
-Features
+#### Features
 
   * Generate authors file for one or more SVN repositories
   * Map SVN authors to domain accounts and get full names and emails from Active Directory
   * Full comment-based help and usage examples.
 
-Usage example
+#### Usage examples
 
 * Create authors file for SVN repository `http://svnserver/svn/project`. New authors file will be created as `c:\authors.txt`
 
@@ -555,7 +555,7 @@ Usage example
 
 This module allows to import, export and convert INI files (and strings) to hashtables (or objects) and vice versa. You can specify various parsing options (INI files are not standardized), or use specific encoding while reading a file.
 
-Features
+#### Features
 
   * Provided cmdlets mimic native PowerShell ones _(Import-\*, Export-\*, ConvertTo-\*, ConvertFrom-\*)_
   * Uses actively supported [INI File Parser](https://github.com/rickyah/ini-parser) by Ricardo Amores Hernández.
@@ -563,7 +563,7 @@ Features
   * Supports any available .Net encoding for reading and writing files (unlike Windows' native functions and their PInvoke wrappers that have [very limited Unicode support](http://www.siao2.com/2006/09/15/754992.aspx).)
   * Full comment-based help and usage examples.
 
-Usage examples:
+#### Usage examples
 
 ###### Import
 * Single file:
