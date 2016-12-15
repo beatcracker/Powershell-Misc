@@ -16,6 +16,7 @@
   - [Get-SpecialFolderPath](#get-specialfolderpath)
   - [Start-ConsoleProcess](#start-consoleprocess)
   - [Remove-ComObject](#remove-comobject)
+  - [Use-ServiceAccount](#use-serviceaccount)
 - [Scripts](#scripts)
   - [New-GitSvnAuthorsFile](#new-gitsvnauthorsfile)
 - [Modules](#modules)
@@ -488,6 +489,43 @@ $Ie = New-Object -ComObject InternetExplorer.Application
 
 # Remove Internet Explorer COM object
 Remove-ComObject -Name Ie
+```
+
+### [Use-ServiceAccount](Use-ServiceAccount.ps1)
+
+Wrapper around Win32 API functions for managing (Group) Managed Service Accounts. Allows to test/add/remove (G)MSAs.
+
+Unlike it's counterparts in the 'Active Directory' module, which [require CredSSP](http://serverfault.com/questions/203123/unable-able-to-run-remote-powershell-using-active-directory) to be configured when used over PSRemoting, this function works with [resource-based Kerberos constrained delegation](https://blogs.technet.microsoft.com/ashleymcglone/2016/08/30/powershell-remoting-kerberos-double-hop-solved-securely/).
+
+Features
+
+  * Test/Add/Remove (Group) Managed Service Accounts
+  * Full comment-based help and usage examples.
+
+Usage examples
+
+* Test whether the specified standalone managed service account (sMSA) or group managed service account (gMSA) exists in the Netlogon store on the this server.
+
+```powershell
+'GMSA_Acount' | Use-ServiceAccount -Test
+```
+
+* Install Group Managed Service Account with SAM account name 'GMSA_Account' on the computer on which the cmdlet is run.
+
+```powershell
+'GMSA_Acount' | Use-ServiceAccount -Add
+```
+
+* Queries the specified service account from the local computer.
+
+```powershell
+'GMSA_Acount' | Use-ServiceAccount -Query
+```
+
+* Queries the specified service account from the local computer and return [MSA_INFO_STATE enumeration](https://msdn.microsoft.com/en-us/library/windows/desktop/dd894396.aspx) containing detailed information on (G)MSA state.
+
+```powershell
+'GMSA_Acount' | Use-ServiceAccount -Query -Detailed
 ```
 
 ## Scripts
