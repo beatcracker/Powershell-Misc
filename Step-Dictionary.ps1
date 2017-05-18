@@ -19,11 +19,14 @@
 	Execute scriptblock only if lowest level key name matches specified wildcard. Accepts array of wildcards.
 
 .Parameter Exclude
-	Do not execute scriptblock if lowest level key name matches specified wildcard .Accepts array of wildcards.
+	Do not execute scriptblock if lowest level key name matches specified wildcard. Accepts array of wildcards.
 
 .Parameter Depth
 	Maximum nested node depth. Default value is [Int32]::MaxValue (2147483647).
 	Keys with greater depth are not processed.
+
+.Parameter PassThru
+	Return resulting dictionary.
 
 .Parameter CurrentDepth
 	Internal parameter to support recursion, do not use it.
@@ -42,6 +45,12 @@
 	Step-Dictionary -Dictionary $Dictionary -ScriptBlock {$Dictionary.Remove($key)}
 
 	Remove every lowest level key.
+
+.Example
+	$Dictionary = @{Alfa = @{Bravo = 'Foo'}} | Step-Dictionary -Dictionary $Dictionary -ScriptBlock {$Dictionary[$key] = Get-Random} -PassThru
+
+	Set each lowest level key to random value.
+    -PassThru switch allows to capture resulting dictionary, which otherwise would be unavailable.
 
 .Example
 
@@ -87,6 +96,9 @@ function Step-Dictionary
 		[Parameter(ValueFromPipelineByPropertyName = $true)]
 		[ValidateNotNullOrEmpty()]
 		[int]$Depth = [Int32]::MaxValue,
+
+		[Parameter(ValueFromPipelineByPropertyName = $true)]
+		[switch]$PassThru,
 
 		# Parameter below is to support recursion, do not use it
 		[ValidateNotNullOrEmpty()]
@@ -142,5 +154,10 @@ function Step-Dictionary
 				}
 			}
 		}
+
+        if ($PassThru)
+        {
+            $Dictionary
+        }
 	}
 }
