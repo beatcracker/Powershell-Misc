@@ -155,8 +155,9 @@ function Step-Dictionary
 			}
 		}
 
-        if ($PassThru)
+        if ($PassThru -and 0 -eq $CurrentDepth)
         {
+            Write-Verbose 'Writing dictionary to pipeline'
             $Dictionary
         }
 	}
