@@ -101,7 +101,7 @@ function Step-Dictionary
 		{
 			Write-Verbose "Dictionary key: $key"
 
-			if($Dictionary[$key].GetType().GetInterfaces().Name -contains 'IDictionary')
+			if($null -ne $Dictionary[$key] -and $Dictionary[$key].GetType().GetInterfaces().Name -contains 'IDictionary')
 			{
 				Write-Verbose "The '$key' contains dictionary"
 
