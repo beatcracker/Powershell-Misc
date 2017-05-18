@@ -69,18 +69,8 @@ function Step-Dictionary
 	Param
 	(
 		[Parameter(Mandatory = $true, ValueFromPipeline = $true, ValueFromPipelineByPropertyName = $true)]
-		[ValidateScript({
-			if($_.GetType().GetInterfaces().Name -contains 'IDictionary')
-			{
-				$true
-			}
-			else
-			{
-				throw 'The supplied object is not a dictionary.'
-			}
-		})]
-		[ValidateNotNullOrEmpty()]
-		$Dictionary,
+		[ValidateNotNull()]
+		[System.Collections.IDictionary]$Dictionary,
 
 		[Parameter(Mandatory = $true, ValueFromPipelineByPropertyName = $true)]
 		[ValidateNotNullOrEmpty()]
