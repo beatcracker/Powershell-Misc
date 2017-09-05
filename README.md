@@ -463,6 +463,8 @@ Remove-ComObject -Name Ie
 
 Wrapper around Win32 API functions for managing (Group) Managed Service Accounts. Allows to test/add/remove (G)MSAs.
 
+See this post for more details: [Using Group Managed Service Accounts without Active Directory module](https://beatcracker.wordpress.com/2017/02/03/using-group-managed-service-accounts-without-active-directory-module/)
+
 Unlike it's counterparts in the 'Active Directory' module, which [require CredSSP](http://serverfault.com/questions/203123/unable-able-to-run-remote-powershell-using-active-directory) to be configured when used over PSRemoting, this function works with [resource-based Kerberos constrained delegation](https://blogs.technet.microsoft.com/ashleymcglone/2016/08/30/powershell-remoting-kerberos-double-hop-solved-securely/).
 
 #### Features
