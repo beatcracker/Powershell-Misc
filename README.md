@@ -16,6 +16,7 @@
   - [Start-ConsoleProcess](#start-consoleprocess)
   - [Remove-ComObject](#remove-comobject)
   - [Use-ServiceAccount](#use-serviceaccount)
+  - [Use-Object](#use-object)
 - [Scripts](#scripts)
   - [New-GitSvnAuthorsFile](#new-gitsvnauthorsfile)
 
@@ -23,7 +24,7 @@
 
 The best way to use provided functions is a [dot-sourcing](http://ss64.com/ps/source.html).
 
-Dot-sourcing runs a script file in the current scope so that any functions, aliases, and variables that the script file creates are added to the current scope. 
+Dot-sourcing runs a script file in the current scope so that any functions, aliases, and variables that the script file creates are added to the current scope.
 
 ### In PowerShell console\PowerShell ISE script pane
 
@@ -187,7 +188,7 @@ Bulk-import from folder any component, supported by PowerShell (script, module, 
 
   * Supported components:
     * Script (.ps1) - imported using [Dot-Sourcing](http://ss64.com/ps/source.html).
-    * Module - imported using [Import-Module](http://technet.microsoft.com/en-us/library/hh849725.aspx) cmdlet  
+    * Module - imported using [Import-Module](http://technet.microsoft.com/en-us/library/hh849725.aspx) cmdlet
         _This function will only try to import well-formed modules. A "well-formed" module is a module that is stored in a directory that has the same name as the base name of at least one file in the module directory. If a module is not well-formed, Windows PowerShell does not recognize it as a module. [More info](https://msdn.microsoft.com/en-us/library/dd878350.aspx)_
     * Source code (.cs, .vb, .js) - imported using [Add-Type](http://technet.microsoft.com/en-us/library/hh849914.aspx) cmdlet
     * .Net assembly (.dll) - imported using [Add-Type](http://technet.microsoft.com/en-us/library/hh849914.aspx) cmdlet
@@ -229,7 +230,7 @@ Credit to BM for alias and type parameters and their handling.
 
 #### Usage examples
 
-* Create one dynamic parameter. This example illustrates the use of `New-DynamicParameter` to create a single dynamic parameter. The `Drive`'s parameter `ValidateSet` is populated with all available volumes on the computer for handy tab completion / intellisense. 
+* Create one dynamic parameter. This example illustrates the use of `New-DynamicParameter` to create a single dynamic parameter. The `Drive`'s parameter `ValidateSet` is populated with all available volumes on the computer for handy tab completion / intellisense.
 
 ```powershell
 function Get-FreeSpace
@@ -405,7 +406,7 @@ $Result = Start-ConsoleProcess -FilePath robocopy -ArgumentList 'C:\Src', 'C:\Ds
 $Result.StdOut
 
 -------------------------------------------------------------------------------
-   ROBOCOPY     ::     Robust File Copy for Windows                              
+   ROBOCOPY     ::     Robust File Copy for Windows
 -------------------------------------------------------------------------------
 
   Started : 01 January 2016 y. 00:00:01
@@ -413,15 +414,15 @@ $Result.StdOut
      Dest : C:\Dst\
 
     Files : *.*
-    
-  Options : *.* /S /E /DCOPY:DA /COPY:DAT /PURGE /MIR /R:1000000 /W:30 
+
+  Options : *.* /S /E /DCOPY:DA /COPY:DAT /PURGE /MIR /R:1000000 /W:30
 
 ------------------------------------------------------------------------------
 
                        1	C:\Src\
         New File  		       6	Readme.txt
-  0%  
-100%  
+  0%
+100%
 
 ------------------------------------------------------------------------------
 
@@ -450,19 +451,19 @@ Microsoft DiskPart version 6.3.9600
 Copyright (C) 1999-2013 Microsoft Corporation.
 On computer: HAL9000
 
-DISKPART> 
+DISKPART>
   Disk ###  Status         Size     Free     Dyn  Gpt
   --------  -------------  -------  -------  ---  ---
-  Disk 0    Online          298 GB      0 B         
+  Disk 0    Online          298 GB      0 B
 
-DISKPART> 
+DISKPART>
   Volume ###  Ltr  Label        Fs     Type        Size     Status     Info
   ----------  ---  -----------  -----  ----------  -------  ---------  --------
-  Volume 0     E                       DVD-ROM         0 B  No Media           
-  Volume 1     C   System       NTFS   Partition    100 GB  Healthy    System  
-  Volume 2     D   Storage      NTFS   Partition    198 GB  Healthy            
+  Volume 0     E                       DVD-ROM         0 B  No Media
+  Volume 1     C   System       NTFS   Partition    100 GB  Healthy    System
+  Volume 2     D   Storage      NTFS   Partition    198 GB  Healthy
 
-DISKPART> 
+DISKPART>
 ```
 
 ### [Remove-ComObject](Remove-ComObject.ps1)
@@ -523,6 +524,36 @@ Unlike it's counterparts in the 'Active Directory' module, which [require CredSS
 
 ```powershell
 'GMSA_Acount' | Use-ServiceAccount -Query -Detailed
+```
+
+### [Use-Object](Use-Object.ps1)
+
+PowerShell-style version of C# 'using' statement.
+
+I felt that C# syntax is no quite fit for PowerShell, so I've made a 'pipelined' version.
+
+The object is passed via the pipeline and scriptblock is passed as parameter.
+The object is available to the scriptblock via $_ variable, similarly to 'ForEach-Obect'.
+
+More details here: [Yet another Using statement](https://beatcracker.wordpress.com/2017/12/09/yet-another-using-statement/)
+
+#### Usage examples
+
+* Use `StreamWriter` to write text to file. Stream will be disposed and closed after scriptblock is executed.
+
+```powershell
+New-Object -TypeName System.IO.StreamWriter -ArgumentList 'c:\foo.txt' | Use-Object {$_.WriteLine('BAR')}
+```
+
+* Use Internet Explorer to show website and release IE COM object afterwards.
+
+```powershell
+New-Object -ComObject InternetExplorer.Application | Use-Object {
+  $_.Visible = $true
+  $_.navigate('https://bing.com')
+  Start-Sleep -Seconds 10
+  $_.Quit()
+}
 ```
 
 ## Scripts
