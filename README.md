@@ -79,35 +79,6 @@ $ScriptDir = Split-Path $script:MyInvocation.MyCommand.Path
 
 ```
 
-## How to use Modules
-Download\clone this repository and copy module folder to your PowerShell modules folder. If you downloaded repository as ZIP file, you need to unblock it first:
-
-* Using GUI: right-click ZIP file, click `Properties` and then click the `Unblock` button.
-* Using PowerShell: `Unblock-File 'X:\Path\to\file.zip'`
-
-PowerShell will look in the paths specified in the `$env:PSModulePath` environment variable when searching for available modules on a system. Default locations are:
-  * System-wide:
-    * `C:\Program Files\WindowsPowerShell\Modules`
-    * `C:\Windows\system32\WindowsPowerShell\v1.0\Modules\`
-  * Per-user:
-    * `C:\Users\USERNAME\Documents\WindowsPowerShell\Modules`
-
-Modules stored in those locations are easily discoverable and autoloaded with PowerShell 3.0 and higher. If you're not sure, copy module to your *Per-user* folder.
-
-* To list all available modules, use:
-```powershell
-Get-Module -ListAvailable
-```
-* To import available module, use:
-```powershell
-Import-Module -Name 'ModuleName'
-```
-
-Alternatively, you can import module from any location:
-```powershell
-Import-Module -Name 'X:\Path\to\module_folder'
-```
-
 ## Functions
 
 ### [Get-TerminologyTranslation](Get-TerminologyTranslation.ps1)
@@ -492,6 +463,8 @@ Remove-ComObject -Name Ie
 ### [Use-ServiceAccount](Use-ServiceAccount.ps1)
 
 Wrapper around Win32 API functions for managing (Group) Managed Service Accounts. Allows to test/add/remove (G)MSAs.
+
+See this post for more details: [Using Group Managed Service Accounts without Active Directory module](https://beatcracker.wordpress.com/2017/02/03/using-group-managed-service-accounts-without-active-directory-module/)
 
 Unlike it's counterparts in the 'Active Directory' module, which [require CredSSP](http://serverfault.com/questions/203123/unable-able-to-run-remote-powershell-using-active-directory) to be configured when used over PSRemoting, this function works with [resource-based Kerberos constrained delegation](https://blogs.technet.microsoft.com/ashleymcglone/2016/08/30/powershell-remoting-kerberos-double-hop-solved-securely/).
 
