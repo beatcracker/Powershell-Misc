@@ -501,12 +501,12 @@ Unlike it's counterparts in the 'Active Directory' module, which [require CredSS
 
 ### [Use-Object](Use-Object.ps1)
 
-PowerShell-style version of C# 'using' statement.
+PowerShell-style version of C# `using` statement.
 
-I felt that C# syntax is no quite fit for PowerShell, so I've made a 'pipelined' version.
+I felt that C# syntax is no quite fit for PowerShell, so I've made a "pipelined" version.
 
 The object is passed via the pipeline and scriptblock is passed as parameter.
-The object is available to the scriptblock via $_ variable, similarly to 'ForEach-Obect'.
+The object is available to the scriptblock via $_ variable, similarly to `ForEach-Obect`.
 
 More details here: [Yet another Using statement](https://beatcracker.wordpress.com/2017/12/09/yet-another-using-statement/)
 
