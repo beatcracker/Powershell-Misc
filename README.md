@@ -17,6 +17,7 @@
   - [Remove-ComObject](#remove-comobject)
   - [Use-ServiceAccount](#use-serviceaccount)
   - [Use-Object](#use-object)
+  - [Add-ClusterMsmqRole](#add-clustermsmqrole)
 - [Scripts](#scripts)
   - [New-GitSvnAuthorsFile](#new-gitsvnauthorsfile)
 
@@ -527,6 +528,24 @@ New-Object -ComObject InternetExplorer.Application | Use-Object {
   Start-Sleep -Seconds 10
   $_.Quit()
 }
+```
+
+### [Add-ClusterMsmqRole](Add-ClusterMsmqRole.ps1)
+
+Creates clustered MSMQ role with correct group type and dependencies. Can optionally add services to the created group.
+
+#### Usage examples
+
+* Create new MSMQ role with network name `MSMQ` and IP address `10.20.30.40` using `Cluster Disk 1` for shared storage. Start `MSMQ` group after it`s been created.
+
+```powershell
+  Add-ClusterMsmqRole -Name 'MSMQ' -Disk 'Cluster Disk 1' -IpAddress '10.20.30.40' -Start
+```
+
+* Create new MSMQ role with network name `MSMQ` and IP address `10.20.30.40` using `Cluster Disk 1` for shared storage. Add windows service `SomeService` to `MSMQ` group. Do not start `MSMQ` group.
+
+```powershell
+  Add-ClusterMsmqRole -Name 'MSMQ' -Disk 'Cluster Disk 1' -IpAddress '10.20.30.40' -Service 'SomeService'
 ```
 
 ## Scripts
