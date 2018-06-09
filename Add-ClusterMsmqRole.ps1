@@ -13,7 +13,7 @@
     Cluster disk name to use for shared storage.
     Must exist and be available.
 
-.Parameter IpAddress
+.Parameter StaticAddress
     Array of IP addresses that should be added to the group.
 
 .Parameter Services
@@ -31,13 +31,13 @@
     Start role group after it's been created.
 
 .Example
-    Add-ClusterMsmqRole -Name 'MSMQ' -Disk 'Cluster Disk 1' -IpAddress '10.20.30.40' -Start
+    Add-ClusterMsmqRole -Name 'MSMQ' -Disk 'Cluster Disk 1' -StaticAddress '10.20.30.40' -Start
 
     Create new MSMQ role with network name 'MSMQ' and IP address '10.20.30.40' using 'Cluster Disk 1' for shared storage.
     Start 'MSMQ' group after it's been created.
 
 .Example
-    Add-ClusterMsmqRole -Name 'MSMQ' -Disk 'Cluster Disk 1' -IpAddress '10.20.30.40' -Service 'SomeService'
+    Add-ClusterMsmqRole -Name 'MSMQ' -Disk 'Cluster Disk 1' -StaticAddress '10.20.30.40' -Service 'SomeService'
 
     Create new MSMQ role with network name 'MSMQ' and IP address '10.20.30.40' using 'Cluster Disk 1' for shared storage.
     Add windows service 'SomeService' to 'MSMQ' group. Do not start 'MSMQ' group.
@@ -55,7 +55,7 @@ function Add-ClusterMsmqRole {
 
         [Parameter(Mandatory = $true, Position = 2)]
         [ValidateNotNullOrEmpty()]
-        [ipaddress[]]$IpAddress,
+        [ipaddress[]]$StaticAddress,
 
         [Parameter(Position = 3)]
         [ValidateNotNullOrEmpty()]
@@ -104,7 +104,7 @@ function Add-ClusterMsmqRole {
         Write-Verbose "[*] Creating group: $Name"
         $Group = Add-ClusterGroup -Name $Name -GroupType Msmq
 
-        $IpAddressList = foreach ($ip in $IpAddress) {
+        $StaticAddressList = foreach ($ip in $StaticAddress) {
             $ipName = "IP Address $ip"
             Write-Verbose "[*] Adding '$ipName' to '$Group' using '$Network'"
             $Group |
@@ -126,7 +126,7 @@ function Add-ClusterMsmqRole {
         $NetworkName | Set-ClusterParameter -Name 'DnsName' -Value $Name | Write-Verbose
 
         $NetworkNameDep = (
-            $IpAddressList | ForEach-Object {"([$_])"}
+            $StaticAddressList | ForEach-Object {"([$_])"}
         ) -join ' and '
     
         Write-Verbose "[*] Adding dependencies to '$NetworkName (Network Name)': $NetworkNameDep"
