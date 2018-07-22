@@ -18,6 +18,7 @@
   - [Use-ServiceAccount](#use-serviceaccount)
   - [Use-Object](#use-object)
   - [Add-ClusterMsmqRole](#add-clustermsmqrole)
+  - [ConvertTo-ZabbixJson](#convertto-zabbixjson)
 - [Scripts](#scripts)
   - [New-GitSvnAuthorsFile](#new-gitsvnauthorsfile)
 
@@ -546,6 +547,55 @@ Creates clustered MSMQ role with correct group type and dependencies. Can option
 
 ```powershell
   Add-ClusterMsmqRole -Name 'MSMQ' -Disk 'Cluster Disk 1' -StaticAddress '10.20.30.40' -Service 'SomeService'
+```
+
+### [ConvertTo-ZabbixJson](ConvertTo-ZabbixJson.ps1)
+
+Convert an object to a JSON that can be used with [Zabbix low-level discovery](https://www.zabbix.com/documentation/3.4/manual/discovery/low_level_discovery).
+
+There are lot of Zabbix templates out there that use PowerShell for low-level discovery. Unfortunately, each an every one of them generates JSON [like this](https://github.com/vintagegamingsystems/Disk-Low-Level-Discovery-for-Physical-Disk-within-Windows-Performance-Monitoring-in-Zabbix-2.0/blob/master/get_disks.ps1):
+
+```powershell
+$drives = Get-WmiObject win32_PerfFormattedData_PerfDisk_PhysicalDisk | ?{$_.name -ne "_Total"} | Select Name
+$idx = 1
+write-host "{"
+write-host " `"data`":[`n"
+foreach ($perfDrives in $drives)
+{
+    if ($idx -lt $drives.Count)
+    {
+        $line= "{ `"{#DISKNUMLET}`" : `"" + $perfDrives.Name + "`" },"
+        write-host $line
+    }
+    elseif ($idx -ge $drives.Count)
+    {
+    $line= "{ `"{#DISKNUMLET}`" : `"" + $perfDrives.Name + "`" }"
+    write-host $line
+    }
+    $idx++;
+}
+write-host
+write-host " ]"
+write-host "}"
+```
+
+Please, use this function to easily generate Zabbix LLD-compatible JSON instead of trying to create it manually. Save the puppies!
+
+#### Usage examples
+
+* Converts website object to Zabbix LLD JSON.
+
+```powershell
+  Get-Website | Select-Object name, physicalPath | ConvertTo-ZabbixJson
+
+  {
+      "data":  [
+                  {
+                      "{#NAME}":  "Default Web Site",
+                      "{#PHYSICALPATH}":  "C:\\inetpub\\wwwroot"
+                  }
+              ]
+  }
 ```
 
 ## Scripts
