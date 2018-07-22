@@ -583,19 +583,24 @@ Please, use this function to easily generate Zabbix LLD-compatible JSON instead 
 
 #### Usage examples
 
-* Converts website object to Zabbix LLD JSON.
+* Converts `PhysicalDisk` object to Zabbix LLD JSON.
 
 ```powershell
-  Get-Website | Select-Object name, physicalPath | ConvertTo-ZabbixJson
+Get-WmiObject -Class win32_PerfFormattedData_PerfDisk_PhysicalDisk |
+Where-Object Name -ne '_Total' |
+Select-Object -Property Name |
+ConvertTo-ZabbixJson
 
-  {
-      "data":  [
-                  {
-                      "{#NAME}":  "Default Web Site",
-                      "{#PHYSICALPATH}":  "C:\\inetpub\\wwwroot"
-                  }
-              ]
-  }
+{
+    "data":  [
+                 {
+                     "{#NAME}":  "0 C:"
+                 },
+                 {
+                     "{#NAME}":  "1 D:"
+                 }
+             ]
+}
 ```
 
 ## Scripts
