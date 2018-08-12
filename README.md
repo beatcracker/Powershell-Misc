@@ -535,6 +535,8 @@ New-Object -ComObject InternetExplorer.Application | Use-Object {
 
 Creates clustered MSMQ role with correct group type and dependencies. Can optionally add services to the created group.
 
+See this post for more details: [Create clustered MSMQ role using PowerShell](https://beatcracker.wordpress.com/2018/08/12/create-clustered-msmq-role-using-powershell/)
+
 #### Usage examples
 
 * Create new MSMQ role with network name `MSMQ` and IP address `10.20.30.40` using `Cluster Disk 1` for shared storage. Start `MSMQ` group after it`s been created.
