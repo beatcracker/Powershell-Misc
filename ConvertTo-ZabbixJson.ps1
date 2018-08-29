@@ -91,7 +91,7 @@ function ConvertTo-ZabbixJson {
             $Property = foreach ($name in $item.PsObject.Properties.Name) {
                 @{
                     n = '{{#{0}}}' -f $name.ToUpper()
-                    e = [scriptblock]::Create(('$_.''{0}''' -f $name))
+                    e = [scriptblock]::Create(('$_.''{0}''.ToString()' -f $name))
                 }
             }
 
