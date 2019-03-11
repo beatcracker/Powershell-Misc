@@ -65,7 +65,7 @@ function ConvertTo-ZabbixJson {
             # if item is hashtable, convert it to PSCustomObject
             $item = [pscustomobject]$item
 
-            if ($InvalidPropertyName = @($item.PsObject.Properties.Name) -notmatch '[0-9A-Z_\.]') {
+            if ($InvalidPropertyName = @($item.PsObject.Properties.Name) -match '[^0-9A-Z_\.]') {
                 throw "Invalid property name: $InvalidPropertyName . Allowed symbols for LLD macro names are: 0-9 , A-Z , _ , ."
             }
 
