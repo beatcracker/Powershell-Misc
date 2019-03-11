@@ -10,10 +10,6 @@
 .Parameter InputObject
     Object to be converted. You can supply multiple objects.
 
-.Parameter Depth
-    Specifies how many levels of contained objects are included in the JSON representation.
-    If not set, the ConvertTo-Json defaults are used.
-
 .Parameter Compress
     Omits white space and indented formatting in the output string.
     If not set, the ConvertTo-Json defaults are used.
@@ -57,24 +53,10 @@ function ConvertTo-ZabbixJson {
         $InputObject,
 
         [Parameter(Position = 1)]
-        [ValidateRange(1, 100)]
-        [int]$Depth,
-
-        [Parameter(Position = 2)]
         [switch]$Compress
     )
 
     Begin {
-        $Common = @{}
-
-        if ($Depth) {
-            $Common.Depth = $Depth
-        }
-
-        if ($Compress) {
-            $Common.Compress = $Compress
-        }
-
         $Result = New-Object -TypeName System.Collections.Generic.List[PSCustomObject]
     }
 
@@ -103,7 +85,7 @@ function ConvertTo-ZabbixJson {
 
     End {
         if ($Result.Count) {
-            @{data = $Result} | ConvertTo-Json @Common
+            @{data = $Result} | ConvertTo-Json -Compress:$Compress
         }
     }
 }
