@@ -38,7 +38,7 @@ Dot-sourcing runs a script file in the current scope so that any functions, alia
 
 Or, navigate to the folder, where you downloaded script file
 
-```
+```none
 cd c:\scripts
 ```
 
@@ -89,37 +89,41 @@ Enables user to look up terminology translations and user-interface translations
 
 #### Features
 
-  * Any-to-any language translation searches, e.g. Japanese to/from French or any other language combination.
-  * Filter searches with string case and hotkey sensitivity.
-  * Filter searches by product name and version.
-  * Get list of languages supported by the Terminology Service API.
-  * Get list of products supported by the Terminology Service API.
-  * Full comment-based help and usage examples.
+- Any-to-any language translation searches, e.g. Japanese to/from French or any other language combination.
+- Filter searches with string case and hotkey sensitivity.
+- Filter searches by product name and version.
+- Get list of languages supported by the Terminology Service API.
+- Get list of products supported by the Terminology Service API.
+- Full comment-based help and usage examples.
 
 #### Usage examples
 
-* Ever wonder how [Cherokee](http://en.wikipedia.org/wiki/Cherokee) spell `Start menu`?
+- Ever wonder how [Cherokee](http://en.wikipedia.org/wiki/Cherokee) spell `Start menu`?
+
 ```powershell
 'Start menu' | Get-TerminologyTranslation -From 'en-us' -To 'chr-cher-us' -Source Both
 
 ᎠᏂᎩᏍᏙᏗ ᏗᏑᏰᏍᏗᎢ
 ```
 
-* What is `Control panel` in French?
+- What is `Control panel` in French?
+
 ```powershell
 'Control panel' | Get-TerminologyTranslation -From 'en-us' -To 'fr-fr' -Source Both
 
 Panneau de configuration
 ```
 
-* How about `Fatal Error` in German?
+- How about `Fatal Error` in German?
+
 ```powershell
 'Fatal error' | Get-TerminologyTranslation -From 'en-us' -To 'de-de' -Source Both
 
 Schwerwiegender Fehler
 ```
 
-* You've got a cyrillic SharePoint installation and wonder where the hell is `Application Management` in SharePoint Central Administration?
+- You've got a cyrillic SharePoint installation and wonder where the hell is `Application Management` in SharePoint Central Administration?
+
 ```powershell
 'Application Management' | Get-TerminologyTranslation -From 'en-us' -To 'ru-ru' -Source 'UiStrings' -Name 'SharePoint Server'
 
@@ -132,12 +136,13 @@ PowerShell version of [EchoArgs](http://blogs.technet.com/b/heyscriptingguy/arch
 
 #### Features
 
-  * Parse arbitrary command-line, or if none specified, the command-line of the current PowerShell host.
-  * Full comment-based help and usage examples.
+- Parse arbitrary command-line, or if none specified, the command-line of the current PowerShell host.
+- Full comment-based help and usage examples.
 
 #### Usage examples
 
-* Parse user-specified command-line
+- Parse user-specified command-line
+
 ```powershell
 '"c:\windows\notepad.exe" test.txt' | Split-CommandLine
 
@@ -145,7 +150,8 @@ c:\windows\notepad.exe
 test.txt
 ```
 
-* Parse command-line of the live process
+- Parse command-line of the live process
+
 ```powershell
 Get-WmiObject Win32_Process -Filter "Name='notepad.exe'" | Split-CommandLine
 
@@ -159,90 +165,88 @@ Bulk-import from folder any component, supported by PowerShell (script, module, 
 
 #### Features
 
-  * Supported components:
-    * Script (.ps1) - imported using [Dot-Sourcing](http://ss64.com/ps/source.html).
-    * Module - imported using [Import-Module](http://technet.microsoft.com/en-us/library/hh849725.aspx) cmdlet
-        _This function will only try to import well-formed modules. A "well-formed" module is a module that is stored in a directory that has the same name as the base name of at least one file in the module directory. If a module is not well-formed, Windows PowerShell does not recognize it as a module. [More info](https://msdn.microsoft.com/en-us/library/dd878350.aspx)_
-    * Source code (.cs, .vb, .js) - imported using [Add-Type](http://technet.microsoft.com/en-us/library/hh849914.aspx) cmdlet
-    * .Net assembly (.dll) - imported using [Add-Type](http://technet.microsoft.com/en-us/library/hh849914.aspx) cmdlet
-  * Full comment-based help and usage examples.
+- Supported components:
+  - Script (.ps1) - imported using [Dot-Sourcing](http://ss64.com/ps/source.html).
+  - Module - imported using [Import-Module](http://technet.microsoft.com/en-us/library/hh849725.aspx) cmdlet
+      _This function will only try to import well-formed modules. A "well-formed" module is a module that is stored in a directory that has the same name as the base name of at least one file in the module directory. If a module is not well-formed, Windows PowerShell does not recognize it as a module. [More info](https://msdn.microsoft.com/en-us/library/dd878350.aspx)_
+  - Source code (.cs, .vb, .js) - imported using [Add-Type](http://technet.microsoft.com/en-us/library/hh849914.aspx) cmdlet
+  - .Net assembly (.dll) - imported using [Add-Type](http://technet.microsoft.com/en-us/library/hh849914.aspx) cmdlet
+- Full comment-based help and usage examples.
 
 __WARNING: To import .PS1 scripts this function itself has to be dot-sourced!__ Example:
 
 *Note the space between first dot and function name!*
+
 ```powershell
 . Import-Component 'C:\PsLib'
 ```
 
 #### Usage examples
 
-* Import all supported components (`.ps1`, `module`, `.cs`, `.vb`, `.js`, `.dll`), recurse into subdirectories. Include only files with names without extension that match wildcards `MyScript*` and `*MyLib*`. Exclude files with names without extension that match `*_backup*` and `*_old*` wildcards.
+- Import all supported components (`.ps1`, `module`, `.cs`, `.vb`, `.js`, `.dll`), recurse into subdirectories. Include only files with names without extension that match wildcards `MyScript*` and `*MyLib*`. Exclude files with names without extension that match `*_backup*` and `*_old*` wildcards.
 
 ```powershell
 . Import-Component 'C:\PsLib' -Recurse -Include 'MyScript*','*MyLib*' -Exclude '*_backup*','*_old*'
 ```
+
 ### [New-DynamicParameter](New-DynamicParameter.ps1)
 
 Helper function to simplify creating [dynamic parameters](https://technet.microsoft.com/en-us/library/hh847743.aspx).
 Example use cases:
- - Include parameters only if your environment dictates it
- - Include parameters depending on the value of a user-specified parameter
- - Provide tab completion and intellisense for parameters, depending on the environment
+
+- Include parameters only if your environment dictates it
+- Include parameters depending on the value of a user-specified parameter
+- Provide tab completion and intellisense for parameters, depending on the environment
 
 Credits to Justin Rich ([blog](http://jrich523.wordpress.com), [GitHub](https://github.com/jrich523)) and Warren F. ([blog](http://ramblingcookiemonster.github.io), [GitHub](https://github.com/RamblingCookieMonster)) for their initial code and inspiration:
- - [New-DynamicParam.ps1](https://github.com/RamblingCookieMonster/PowerShell/New-DynamicParam.ps1)
- - [Credentials and Dynamic Parameters](http://ramblingcookiemonster.wordpress.com/2014/11/27/quick-hits-credentials-and-dynamic-parameters/)
- - [PowerShell: Simple way to add dynamic parameters to advanced function](http://jrich523.wordpress.com/2013/05/30/powershell-simple-way-to-add-dynamic-parameters-to-advanced-function/)
+
+- [New-DynamicParam.ps1](https://github.com/RamblingCookieMonster/PowerShell/New-DynamicParam.ps1)
+- [Credentials and Dynamic Parameters](http://ramblingcookiemonster.wordpress.com/2014/11/27/quick-hits-credentials-and-dynamic-parameters/)
+- [PowerShell: Simple way to add dynamic parameters to advanced function](http://jrich523.wordpress.com/2013/05/30/powershell-simple-way-to-add-dynamic-parameters-to-advanced-function/)
 
 Credit to BM for alias and type parameters and their handling.
 
 #### Features
 
-  * Create dynamic parameters for your functions on the fly.
-  * Full comment-based help and usage examples.
+- Create dynamic parameters for your functions on the fly.
+- Full comment-based help and usage examples.
 
 #### Usage examples
 
-* Create one dynamic parameter. This example illustrates the use of `New-DynamicParameter` to create a single dynamic parameter. The `Drive`'s parameter `ValidateSet` is populated with all available volumes on the computer for handy tab completion / intellisense.
+- Create one dynamic parameter. This example illustrates the use of `New-DynamicParameter` to create a single dynamic parameter. The `Drive`'s parameter `ValidateSet` is populated with all available volumes on the computer for handy tab completion / intellisense.
 
 ```powershell
-function Get-FreeSpace
-{
-	[CmdletBinding()]
-	Param()
-	DynamicParam
-	{
-		# Get drive names for ValidateSet attribute
-		$DriveList = ([System.IO.DriveInfo]::GetDrives()).Name
+function Get-FreeSpace {
+    [CmdletBinding()]
+    Param()
+    DynamicParam {
+        # Get drive names for ValidateSet attribute
+        $DriveList = ([System.IO.DriveInfo]::GetDrives()).Name
 
-		# Create new dynamic parameter
-		New-DynamicParameter -Name Drive -ValidateSet $DriveList -Type ([array]) -Position 0 -Mandatory
-	}
+        # Create new dynamic parameter
+        New-DynamicParameter -Name Drive -ValidateSet $DriveList -Type ([array]) -Position 0 -Mandatory
+    }
 
-	Process
-	{
-		# Dynamic parameters don't have corresponding variables created,
-		# you need to call New-DynamicParameter with CreateVariables switch to fix that.
-		New-DynamicParameter -CreateVariables -BoundParameters $PSBoundParameters
+    Process {
+        # Dynamic parameters don't have corresponding variables created,
+        # you need to call New-DynamicParameter with CreateVariables switch to fix that.
+        New-DynamicParameter -CreateVariables -BoundParameters $PSBoundParameters
 
-		$DriveInfo = [System.IO.DriveInfo]::GetDrives() | Where-Object {$Drive -contains $_.Name}
-		$DriveInfo |
-			ForEach-Object {
-				if(!$_.TotalFreeSpace)
-				{
-					$FreePct = 0
-				}
-				else
-				{
-					$FreePct = [System.Math]::Round(($_.TotalSize / $_.TotalFreeSpace), 2)
-				}
-				New-Object -TypeName psobject -Property @{
-					Drive = $_.Name
-					DriveType = $_.DriveType
-					'Free(%)' = $FreePct
-				}
-			}
-	}
+        $DriveInfo = [System.IO.DriveInfo]::GetDrives() | Where-Object {$Drive -contains $_.Name}
+        $DriveInfo |
+            ForEach-Object {
+            if (!$_.TotalFreeSpace) {
+                $FreePct = 0
+            } else {
+                $FreePct = [System.Math]::Round(($_.TotalSize / $_.TotalFreeSpace), 2)
+            }
+            New-Object -TypeName psobject -Property @{
+                Drive     = $_.Name
+                DriveType = $_.DriveType
+                'Free(%)' = $FreePct
+            }
+        }
+    }
 }
 ```
 
@@ -252,19 +256,18 @@ Get list of unique commit authors in one or more SVN repositories. Requires Subv
 
 #### Features
 
-  * Get list of unique commit authors in one or more SVN repositories.
-  * Full comment-based help and usage examples.
+- Get list of unique commit authors in one or more SVN repositories.
+- Full comment-based help and usage examples.
 
 #### Usage examples
 
-* Get list of unique commit authors for SVN repository `http://svnserver/svn/project`
+- Get list of unique commit authors for SVN repository `http://svnserver/svn/project`
 
 ```powershell
 'http://svnserver/svn/project' | Get-SvnAuthor
 
 John Doe
 Jane Doe
-
 ```
 
 ### [Step-Dictionary](Step-Dictionary.ps1)
@@ -273,22 +276,20 @@ Recursively walk through each item in a dictionary and execute scriptblock again
 
 #### Features
 
-  * Recursively walk through each item in a dictionary and execute scriptblock against lowest level keys.
-  * Full comment-based help and usage examples.
+- Recursively walk through each item in a dictionary and execute scriptblock against lowest level keys.
+- Full comment-based help and usage examples.
 
 #### Usage examples
 
-
 ```powershell
-
 $Dictionary = @{
-	Alfa = @{
-		Bravo = @{
-			Charlie = 'FooBar'
-			Delta = 'BarFoo'
-			Echo = 'FarBoo'
-		}
-	}
+    Alfa = @{
+        Bravo = @{
+            Charlie = 'FooBar'
+            Delta   = 'BarFoo'
+            Echo    = 'FarBoo'
+        }
+    }
 }
 
 # Search for lowest level keys with name 'Charlie' and output their values
@@ -313,33 +314,36 @@ Gets the path to the system special folder that is identified by the specified e
 
 #### Features
 
-  * Gets the path to the system special folder that is identified by the specified enumeration (`CSIDL`, `KNOWNFOLDERID` or best match).
-  * Full comment-based help and usage examples.
+- Gets the path to the system special folder that is identified by the specified enumeration (`CSIDL`, `KNOWNFOLDERID` or best match).
+- Full comment-based help and usage examples.
 
 #### Usage examples
 
+- Get folder paths for 'Favorites' and Desktop folders using both `CSIDL` and `KNOWNFOLDERID`
 
-* Get folder paths for 'Favorites' and Desktop folders using both `CSIDL` and `KNOWNFOLDERID`
 ```powershell
 'Favorites', 'CSIDL_DESKTOP' | Get-SpecialFolderPath
 Get-SpecialFolderPath -Name 'Favorites', 'CSIDL_DESKTOP'
 ```
 
-* Get folder path for Desktop folder by `CSIDL`
+- Get folder path for Desktop folder by `CSIDL`
+
 ```powershell
 Get-SpecialFolderPath -Csidl 'CSIDL_DESKTOP'
 ```
 
-* Get folder path for 'Favorites' folder by `KNOWNFOLDERID`
+- Get folder path for 'Favorites' folder by `KNOWNFOLDERID`
 
 ```powershell
 Get-SpecialFolderPath -KnownFolderId 'Favorites'
 ```
 
-* Get folder path for `NetHood` `KNOWNFOLDERID`.
+- Get folder path for `NetHood` `KNOWNFOLDERID`.
+
 ```powershell
 Get-SpecialFolderPath -Name 'NetHood'
 ```
+
 On my system, there is no `NetHood` `KNOWNFOLDERID` in SpecialFolder enumeration, so the function will fallback to `CSIDL` mapping. Example of verbose output in this situation:
 
     VERBOSE: Checking if [System.Environment]::GetFolderPath available
@@ -356,15 +360,16 @@ This function will start console executable, pipe any user-specified strings to 
 
 #### Features
 
-  * Returns object with following properties:
-    * `StdOut` - array of strings captured from `StandardOutput`
-    * `StdErr` - array of strings captured from `StandardError`
-    * `ExitCode` - exit code set by executable
-  * Full comment-based help and usage examples.
+- Returns object with following properties:
+  - `StdOut` - array of strings captured from `StandardOutput`
+  - `StdErr` - array of strings captured from `StandardError`
+  - `ExitCode` - exit code set by executable
+- Full comment-based help and usage examples.
 
 #### Usage examples
 
-* Start `find.exe` and capture its output. Because no arguments specified, `find.exe` prints error to `StandardError` stream, which is captured by the function.
+- Start `find.exe` and capture its output. Because no arguments specified, `find.exe` prints error to `StandardError` stream, which is captured by the function.
+
 ```powershell
 Start-ConsoleProcess -FilePath find
 
@@ -373,7 +378,8 @@ StdOut StdErr                               ExitCode
 {}     {FIND: Parameter format not correct}        2
 ```
 
-* Start `robocopy.exe` with arguments  and capture its output. `Robocopy.exe` will mirror contents of the `C:\Src` folder to `C:\Dst` and print log to `StandardOutput` stream, which is captured by the function.
+- Start `robocopy.exe` with arguments  and capture its output. `Robocopy.exe` will mirror contents of the `C:\Src` folder to `C:\Dst` and print log to `StandardOutput` stream, which is captured by the function.
+
 ```powershell
 $Result = Start-ConsoleProcess -FilePath robocopy -ArgumentList 'C:\Src', 'C:\Dst', '/mir'
 $Result.StdOut
@@ -392,8 +398,8 @@ $Result.StdOut
 
 ------------------------------------------------------------------------------
 
-                       1	C:\Src\
-        New File  		       6	Readme.txt
+                       1    C:\Src\
+        New File       6    Readme.txt
   0%
 100%
 
@@ -411,11 +417,11 @@ $Result.StdOut
    Ended : 01 January 2016 y. 00:00:01
 ```
 
-
-* Start `diskpart.exe`, pipe strings to its StandardInput and capture its output. `Diskpart.exe` will accept piped strings as if they were typed in the interactive session and list all disks and volumes on the PC.
+- Start `diskpart.exe`, pipe strings to its StandardInput and capture its output. `Diskpart.exe` will accept piped strings as if they were typed in the interactive session and list all disks and volumes on the PC.
 
 Note that running `diskpart` requires already elevated PowerShell console. Otherwise, you will recieve elevation request and `diskpart` will run, however, no strings would be piped to it.
-```
+
+```none
 $Result = 'list disk', 'list volume' | Start-ConsoleProcess -FilePath diskpart
 $Result.StdOut
 
@@ -445,12 +451,12 @@ Release COM object and remove associated variable. COM object is released using 
 
 #### Features
 
-  * Release COM object and remove associated variable.
-  * Full comment-based help and usage examples.
+- Release COM object and remove associated variable.
+- Full comment-based help and usage examples.
 
 #### Usage examples
 
-* Removes COM object stored in variable `$Ie` and variable itself.
+- Removes COM object stored in variable `$Ie` and variable itself.
 
 ```powershell
 # Create Internet Explorer COM object
@@ -472,30 +478,30 @@ Unlike it's counterparts in the 'Active Directory' module, which [require CredSS
 
 #### Features
 
-  * Test/Add/Remove (Group) Managed Service Accounts
-  * Full comment-based help and usage examples.
+- Test/Add/Remove (Group) Managed Service Accounts
+- Full comment-based help and usage examples.
 
 #### Usage examples
 
-* Test whether the specified standalone managed service account (sMSA) or group managed service account (gMSA) exists in the Netlogon store on the this server.
+- Test whether the specified standalone managed service account (sMSA) or group managed service account (gMSA) exists in the Netlogon store on the this server.
 
 ```powershell
 'GMSA_Acount' | Use-ServiceAccount -Test
 ```
 
-* Install Group Managed Service Account with SAM account name 'GMSA_Account' on the computer on which the cmdlet is run.
+- Install Group Managed Service Account with SAM account name 'GMSA_Account' on the computer on which the cmdlet is run.
 
 ```powershell
 'GMSA_Acount' | Use-ServiceAccount -Add
 ```
 
-* Queries the specified service account from the local computer.
+- Queries the specified service account from the local computer.
 
 ```powershell
 'GMSA_Acount' | Use-ServiceAccount -Query
 ```
 
-* Queries the specified service account from the local computer and return [MSA_INFO_STATE enumeration](https://msdn.microsoft.com/en-us/library/windows/desktop/dd894396.aspx) containing detailed information on (G)MSA state.
+- Queries the specified service account from the local computer and return [MSA_INFO_STATE enumeration](https://msdn.microsoft.com/en-us/library/windows/desktop/dd894396.aspx) containing detailed information on (G)MSA state.
 
 ```powershell
 'GMSA_Acount' | Use-ServiceAccount -Query -Detailed
@@ -514,13 +520,13 @@ More details here: [Yet another Using statement](https://beatcracker.wordpress.c
 
 #### Usage examples
 
-* Use `StreamWriter` to write text to file. Stream will be disposed and closed after scriptblock is executed.
+- Use `StreamWriter` to write text to file. Stream will be disposed and closed after scriptblock is executed.
 
 ```powershell
 New-Object -TypeName System.IO.StreamWriter -ArgumentList 'c:\foo.txt' | Use-Object {$_.WriteLine('BAR')}
 ```
 
-* Use Internet Explorer to show website and release IE COM object afterwards.
+- Use Internet Explorer to show website and release IE COM object afterwards.
 
 ```powershell
 New-Object -ComObject InternetExplorer.Application | Use-Object {
@@ -539,13 +545,13 @@ See this post for more details: [Create clustered MSMQ role using PowerShell](ht
 
 #### Usage examples
 
-* Create new MSMQ role with network name `MSMQ` and IP address `10.20.30.40` using `Cluster Disk 1` for shared storage. Start `MSMQ` group after it`s been created.
+- Create new MSMQ role with network name `MSMQ` and IP address `10.20.30.40` using `Cluster Disk 1` for shared storage. Start `MSMQ` group after it`s been created.
 
 ```powershell
   Add-ClusterMsmqRole -Name 'MSMQ' -Disk 'Cluster Disk 1' -StaticAddress '10.20.30.40' -Start
 ```
 
-* Create new MSMQ role with network name `MSMQ` and IP address `10.20.30.40` using `Cluster Disk 1` for shared storage. Add windows service `SomeService` to `MSMQ` group. Do not start `MSMQ` group.
+- Create new MSMQ role with network name `MSMQ` and IP address `10.20.30.40` using `Cluster Disk 1` for shared storage. Add windows service `SomeService` to `MSMQ` group. Do not start `MSMQ` group.
 
 ```powershell
   Add-ClusterMsmqRole -Name 'MSMQ' -Disk 'Cluster Disk 1' -StaticAddress '10.20.30.40' -Service 'SomeService'
@@ -585,7 +591,7 @@ Please, use this function to easily generate Zabbix LLD-compatible JSON instead 
 
 #### Usage examples
 
-* Converts `PhysicalDisk` object to Zabbix LLD JSON.
+- Converts `PhysicalDisk` object to Zabbix LLD JSON.
 
 ```powershell
 Get-WmiObject -Class win32_PerfFormattedData_PerfDisk_PhysicalDisk |
@@ -609,17 +615,17 @@ ConvertTo-ZabbixJson
 
 ### [New-GitSvnAuthorsFile](New-GitSvnAuthorsFile.ps1)
 
-Generate authors file for one or more SVN repositories to assist SVN to Git migrations.	Can map SVN authors to domain accounts and get full names and emails from Active Directory. Requires Subversion binaries and [Get-SvnAuthor](#get-svnauthor) function.
+Generate authors file for one or more SVN repositories to assist SVN to Git migrations.  Can map SVN authors to domain accounts and get full names and emails from Active Directory. Requires Subversion binaries and [Get-SvnAuthor](#get-svnauthor) function.
 
 #### Features
 
-  * Generate authors file for one or more SVN repositories
-  * Map SVN authors to domain accounts and get full names and emails from Active Directory
-  * Full comment-based help and usage examples.
+- Generate authors file for one or more SVN repositories
+- Map SVN authors to domain accounts and get full names and emails from Active Directory
+- Full comment-based help and usage examples.
 
 #### Usage examples
 
-* Create authors file for SVN repository `http://svnserver/svn/project`. New authors file will be created as `c:\authors.txt`
+- Create authors file for SVN repository `http://svnserver/svn/project`. New authors file will be created as `c:\authors.txt`
 
 ```powershell
 'http://svnserver/svn/project' | New-GitSvnAuthorsFile -Path c:\authors.txt
