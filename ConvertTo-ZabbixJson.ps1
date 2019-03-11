@@ -69,17 +69,14 @@ function ConvertTo-ZabbixJson {
                 throw "Invalid property name: $InvalidPropertyName . Allowed symbols for LLD macro names are: 0-9 , A-Z , _ , ."
             }
 
-            # Build calculated properties for Zabbix LLD object
-            $Property = foreach ($name in $item.PsObject.Properties.Name) {
-                @{
-                    n = '{{#{0}}}' -f $name.ToUpper()
-                    e = [scriptblock]::Create(('$_.''{0}''.ToString()' -f $name))
-                }
+            # Build properties for Zabbix LLD object
+            foreach ($property in $item.PsObject.Properties.Name) {
+                [void]$Result.Add(
+                    @{
+                        ('{{#{0}}}' -f $property.ToUpperInvariant()) = $item.$property.ToString()
+                    }
+                )
             }
-
-            [void]$Result.Add(
-                ($item | Select-Object -Property $Property)
-            )
         }
     }
 
