@@ -73,7 +73,7 @@ function ConvertTo-ZabbixJson {
             foreach ($property in $item.PsObject.Properties.Name) {
                 [void]$Result.Add(
                     @{
-                        ('{{#{0}}}' -f $property.ToUpperInvariant()) = $item.$property.ToString()
+                        "{#$($property.ToUpperInvariant())}" = $item.$property.ToString()
                     }
                 )
             }
