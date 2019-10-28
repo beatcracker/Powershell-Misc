@@ -324,7 +324,7 @@ function Use-ServiceAccount
                 }
             } elseif ($Add) {
                 Write-Verbose 'Installing account using NetAddServiceAccount'
-                if ($PromptForPassword-or $AccountPassword) {
+                if ($PromptForPassword -or $AccountPassword) {
                     if ($PromptForPassword) {
                         $AccountPassword = Read-Host
                     }
