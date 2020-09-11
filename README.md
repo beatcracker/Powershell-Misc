@@ -19,6 +19,7 @@
   - [Use-Object](#use-object)
   - [Add-ClusterMsmqRole](#add-clustermsmqrole)
   - [ConvertTo-ZabbixJson](#convertto-zabbixjson)
+  - [Write-Host](#write-host)
 - [Scripts](#scripts)
   - [New-GitSvnAuthorsFile](#new-gitsvnauthorsfile)
 
@@ -610,6 +611,12 @@ ConvertTo-ZabbixJson
              ]
 }
 ```
+
+### [Write-Host](Write-Host.ps1)
+
+Write-Host but with ANSI colors!
+
+Drop-in Write-Host replacement that uses [ANSI escape codes](https://en.wikipedia.org/wiki/ANSI_escape_code#3/4_bit) to render colors. Allows for colorized output in CI systems.
 
 ## Scripts
 
