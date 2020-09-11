@@ -40,7 +40,8 @@ function Write-Host {
         [System.Object]$Separator,
         [System.ConsoleColor]$ForegroundColor,
         [System.ConsoleColor]$BackgroundColor,
-        [switch]$NoNewline
+        [switch]$NoNewline,
+        [switch]$Force
     )
 
     Begin {
@@ -52,19 +53,26 @@ function Write-Host {
     }
 
     Process {
-        $Method = if ($NoNewline) { 'Write' } else { 'WriteLine' }
-        $Output = if ($Separator) { $Object -join $Separator } else { "$Object" }
-        $AnsiCodes = @(
-            # If color is not specified, use 'default' foreground/background colors
-            if ("$ForegroundColor") { $AnsiColor[$ForegroundColor.value__] } else { 39 }
-            if ("$BackgroundColor") { $AnsiColor[$BackgroundColor.value__] + 10 } else { 49 }
-        ) -join ';'
+        # https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_special_characters#escape-e
+        # https://docs.microsoft.com/en-us/powershell/scripting/windows-powershell/wmf/whats-new/console-improvements#vt100-support
+        if ($Host.UI.SupportsVirtualTerminal) {
+            $Method = if ($NoNewline) { 'Write' } else { 'WriteLine' }
+            $Output = if ($Separator) { $Object -join $Separator } else { "$Object" }
+            $AnsiCodes = @(
+                # If color is not specified, use 'default' foreground/background colors
+                if ("$ForegroundColor") { $AnsiColor[$ForegroundColor.value__] } else { 39 }
+                if ("$BackgroundColor") { $AnsiColor[$BackgroundColor.value__] + 10 } else { 49 }
+            ) -join ';'
 
-        [System.Console]::$Method(
-            '{0}[{1}m{2}{0}[0m',
-            [char]27, # PS < 6.0 doesn't have `e escape character
-            $AnsiCodes,
-            $Output
-        )
+            [System.Console]::$Method(
+                '{0}[{1}m{2}{0}[0m',
+                [char]27, # PS < 6.0 doesn't have `e escape character
+                $AnsiCodes,
+                $Output
+            )
+        }
+        else {
+            Microsoft.PowerShell.Utility\Write-Host @PSBoundParameters
+        }
     }
 }
