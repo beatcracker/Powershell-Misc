@@ -40,8 +40,7 @@ function Write-Host {
         [System.Object]$Separator,
         [System.ConsoleColor]$ForegroundColor,
         [System.ConsoleColor]$BackgroundColor,
-        [switch]$NoNewline,
-        [switch]$Force
+        [switch]$NoNewline
     )
 
     Begin {
