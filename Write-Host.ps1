@@ -49,6 +49,9 @@ function Write-Host {
         $AnsiColor = @(
             30, 34, 32, 36, 31, 35, 33, 37, 90, 94, 92, 96, 91, 95, 93, 97
         )
+        # PS < 6.0 doesn't have `e escape character
+        $Esc = [char]27
+        $AnsiTemplate = "$Esc[{0}m{1}$Esc[{2}m"
     }
 
     Process {
@@ -57,18 +60,19 @@ function Write-Host {
         if ($Host.UI.SupportsVirtualTerminal) {
             $Method = if ($NoNewline) { 'Write' } else { 'WriteLine' }
             $Output = if ($Separator) { $Object -join $Separator } else { "$Object" }
-            $AnsiCodes = @(
-                # If color is not specified, use 'default' foreground/background colors
-                if ("$ForegroundColor") { $AnsiColor[$ForegroundColor.value__] } else { 39 }
-                if ("$BackgroundColor") { $AnsiColor[$BackgroundColor.value__] + 10 } else { 49 }
-            ) -join ';'
 
-            [System.Console]::$Method(
-                '{0}[{1}m{2}{0}[0m',
-                [char]27, # PS < 6.0 doesn't have `e escape character
-                $AnsiCodes,
-                $Output
-            )
+            # Splitting by regex ensures that this will work on files from Windows/Linux/macOS
+            # Get-Content .\Foobar.txt -Raw | Write-Host -ForegroundColor Red
+            foreach ($item in $Output -split '\r\n|\r|\n') {
+                if ("$BackgroundColor") {
+                    $item = $AnsiTemplate -f ($AnsiColor[$BackgroundColor.value__] + 10), $item, 39
+                }
+                if ("$ForegroundColor") {
+                    $item = $AnsiTemplate -f $AnsiColor[$ForegroundColor.value__], $item, 49
+                }
+
+                [System.Console]::$Method($item)
+            }
         }
         else {
             Microsoft.PowerShell.Utility\Write-Host @PSBoundParameters
