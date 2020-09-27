@@ -65,10 +65,10 @@ function Write-Host {
             # Get-Content .\Foobar.txt -Raw | Write-Host -ForegroundColor Red
             foreach ($item in $Output -split '\r\n|\r|\n') {
                 if ("$BackgroundColor") {
-                    $item = $AnsiTemplate -f ($AnsiColor[$BackgroundColor.value__] + 10), $item, 39
+                    $item = $AnsiTemplate -f ($AnsiColor[$BackgroundColor.value__] + 10), $item, 49
                 }
                 if ("$ForegroundColor") {
-                    $item = $AnsiTemplate -f $AnsiColor[$ForegroundColor.value__], $item, 49
+                    $item = $AnsiTemplate -f $AnsiColor[$ForegroundColor.value__], $item, 39
                 }
 
                 [System.Console]::$Method($item)
