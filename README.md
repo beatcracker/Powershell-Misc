@@ -133,7 +133,7 @@ Schwerwiegender Fehler
 
 ### [Split-CommandLine](Split-CommandLine.ps1)
 
-PowerShell version of [EchoArgs](http://blogs.technet.com/b/heyscriptingguy/archive/2011/09/20/solve-problems-with-external-command-lines-in-powershell.aspx). This is the Cmdlet version of the code from the article [PowerShell and external commands done right](http://edgylogic.com/blog/powershell-and-external-commands-done-right). It can parse command-line arguments using Win32 API function [CommandLineToArgvW](http://msdn.microsoft.com/en-us/library/windows/desktop/bb776391.aspx) and echo command line arguments back out to the console for your review.
+PowerShell version of [EchoArgs](https://devblogs.microsoft.com/scripting/solve-problems-with-external-command-lines-in-powershell/). This is the Cmdlet version of the code from the article [PowerShell and external commands done right](https://slai.github.io/posts/powershell-and-external-commands-done-right/). It can parse command-line arguments using Win32 API function [CommandLineToArgvW](https://docs.microsoft.com/en-us/windows/win32/api/shellapi/nf-shellapi-commandlinetoargvw) and echo command line arguments back out to the console for your review.
 
 #### Features
 
