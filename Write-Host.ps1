@@ -57,19 +57,27 @@ function Write-Host {
     Process {
         # https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_special_characters#escape-e
         # https://docs.microsoft.com/en-us/powershell/scripting/windows-powershell/wmf/whats-new/console-improvements#vt100-support
-        $Output = if ($Separator) { $Object -join $Separator } else { "$Object" }
+        if ($Host.UI.SupportsVirtualTerminal -or $Host.Name -eq "ServerRemoteHost") {
+            $Output = if ($Separator) { $Object -join $Separator } else { "$Object" }
 
-        # Splitting by regex ensures that this will work on files from Windows/Linux/macOS
-        # Get-Content .\Foobar.txt -Raw | Write-Host -ForegroundColor Red
-        foreach ($item in $Output -split '\r\n|\r|\n') {
-            if ("$BackgroundColor") {
-                $item = $AnsiTemplate -f ($AnsiColor[$BackgroundColor.value__] + 10), $item, 49
-            }
-            if ("$ForegroundColor") {
-                $item = $AnsiTemplate -f $AnsiColor[$ForegroundColor.value__], $item, 39
-            }
+            # Splitting by regex ensures that this will work on files from Windows/Linux/macOS
+            # Get-Content .\Foobar.txt -Raw | Write-Host -ForegroundColor Red
+            foreach ($item in $Output -split '\r\n|\r|\n') {
+                if ("$BackgroundColor") {
+                    $item = $AnsiTemplate -f ($AnsiColor[$BackgroundColor.value__] + 10), $item, 49
+                }
+                if ("$ForegroundColor") {
+                    $item = $AnsiTemplate -f $AnsiColor[$ForegroundColor.value__], $item, 39
+                }
 
-            if ($NoNewLine) { Microsoft.PowerShell.Utility\Write-Host -NoNewLine $item } else { Microsoft.PowerShell.Utility\Write-Host $item }
+                if ($Host.Name -eq "ServerRemoteHost") {
+                  if ($NoNewLine) { Microsoft.PowerShell.Utility\Write-Host -NoNewLine $item } else { Microsoft.PowerShell.Utility\Write-Host $item }
+                } else {
+                  if ($NoNewline) { [System.Console]::Write($item) } else { [System.Console]::WriteLine($item) }
+                }
+            }
+        } else {
+            Microsoft.PowerShell.Utility\Write-Host @PSBoundParameters
         }
     }
 }
